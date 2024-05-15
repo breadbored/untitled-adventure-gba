@@ -75,21 +75,21 @@ void Player::draw()
       move.y += 0.75;
     }
     vector2f_t normalized = normalize(move, 0.75);
-    debug_text.clear();
+    // debug_text.clear();
     // bn::string<100> debug_text_string;
     // debug_text_string.format("Debug %s, %s", normalized.x, normalized.y);
-    text_generator.generate(
-      0, 
-      -30, 
-      bn::format<100>(
-        bn::string_view("Debug {}.{}, {}.{}"), 
-        (int)normalized.x, 
-        abs((int)(normalized.x * 1000) % 1000),
-        (int)normalized.y,
-        abs((int)(normalized.y * 1000) % 1000)
-        ), 
-      debug_text
-    );
+    // text_generator.generate(
+    //   0, 
+    //   -30, 
+    //   bn::format<100>(
+    //     bn::string_view("Debug {}.{}, {}.{}"), 
+    //     (int)normalized.x, 
+    //     abs((int)(normalized.x * 1000) % 1000),
+    //     (int)normalized.y,
+    //     abs((int)(normalized.y * 1000) % 1000)
+    //     ), 
+    //   debug_text
+    // );
     player->actor.position.x += normalized.x;
     player->actor.position.y += normalized.y;
     player->sprite.set_x(player->actor.getPosition().x);
@@ -145,79 +145,6 @@ void Player::draw()
       }
     }
     
-    this->actor.draw(&animcounter);
-}
-
-void Player::handle_controller(controller_state_t *controller_state) {
-    // Player Movement
-    if (!(controller_state->up || controller_state->down || controller_state->left || controller_state->right)) {
-        this->actor.movementDelay = 0;
-    }
-
-    if (!this->actor.moving) {
-        if( controller_state->down && controller_state->down >= controller_state->up && controller_state->down >= controller_state->left && controller_state->down >= controller_state->right ) {
-            this->actor.direction = Down;
-            vector2_t toPosition = {
-                this->actor.fromPosition.x,
-                floor(this->actor.fromPosition.y / 32) * 32 + 32
-            };
-            if (this->actor.movementDelay > movementDelayThreshold && !this->actor.will_collide(toPosition)) {
-                this->actor.toPosition.x = toPosition.x;
-                this->actor.toPosition.y = toPosition.y;
-                this->actor.moving = true;
-            }
-            this->actor.movementDelay++;
-        } else if ( controller_state->up && controller_state->up >= controller_state->down && controller_state->up >= controller_state->left && controller_state->up >= controller_state->right ) {
-            this->actor.direction = Up;
-            vector2_t toPosition = {
-                this->actor.fromPosition.x,
-                floor(this->actor.fromPosition.y / 32) * 32 - 32
-            };
-            if (this->actor.movementDelay > movementDelayThreshold && !this->actor.will_collide(toPosition)) {
-                this->actor.toPosition.x = toPosition.x;
-                this->actor.toPosition.y = toPosition.y;
-                this->actor.moving = true;
-            }
-            this->actor.movementDelay++;
-        } else if ( controller_state->left && controller_state->left >= controller_state->down && controller_state->left >= controller_state->up && controller_state->left >= controller_state->right ) {
-            this->actor.direction = Left;
-            vector2_t toPosition = {
-                floor(this->actor.fromPosition.x / 32) * 32 - 32,
-                this->actor.fromPosition.y
-            };
-            if (this->actor.movementDelay > movementDelayThreshold && !this->actor.will_collide(toPosition)) {
-                this->actor.toPosition.x = toPosition.x;
-                this->actor.toPosition.y = toPosition.y;
-                this->actor.moving = true;
-            }
-            this->actor.movementDelay++;
-        } else if ( controller_state->right && controller_state->right >= controller_state->down && controller_state->right >= controller_state->up && controller_state->right >= controller_state->left ) {
-            this->actor.direction = Right;
-            vector2_t toPosition = {
-                floor(this->actor.fromPosition.x / 32) * 32 + 32,
-                this->actor.fromPosition.y
-            };
-            if (this->actor.movementDelay > movementDelayThreshold && !this->actor.will_collide(toPosition)) {
-                this->actor.toPosition.x = toPosition.x;
-                this->actor.toPosition.y = toPosition.y;
-                this->actor.moving = true;
-            }
-            this->actor.movementDelay++;
-        }
-    }
-    if (this->actor.moving && this->actor.movementCounter < 8) {
-        this->actor.movementCounter++;
-        // this->actor.movementDelay = 0;
-        vector2_t pos = lerp2( this->actor.getFromPosition(), this->actor.getToPosition(), this->actor.movementCounter / 8.0f);
-        this->actor.position.x = pos.x;
-        this->actor.position.y = pos.y;
-    }
-
-    // Set the FROM position to the current position when we align with the grid
-    if (this->actor.moving && this->actor.position.x == this->actor.toPosition.x && this->actor.position.y == this->actor.toPosition.y) {
-        this->actor.fromPosition.x = this->actor.toPosition.x;
-        this->actor.fromPosition.y = this->actor.toPosition.y;
-        this->actor.moving = false;
-        this->actor.movementCounter = 0;
-    }
+    uint32_t i = 0;
+    this->actor.draw(&i);
 }
