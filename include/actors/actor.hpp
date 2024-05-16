@@ -35,6 +35,7 @@ public:
         frame_delay(0)
     {
         active_sprite.set_visible(false);
+        // active_sprite.dimensions()
     };
 
     void init(vector2f_t position);

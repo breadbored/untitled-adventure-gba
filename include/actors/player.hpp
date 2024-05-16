@@ -14,20 +14,6 @@
 #include "bn_sprite_item.h"
 #include "bn_sprite_animate_actions.h"
 
-struct controller_state_t {
-    unsigned int data;
-    bool A;
-    bool B;
-    bool down;
-    bool left;
-    bool right;
-    bool up;
-    bool start;
-    bool select;
-    bool L;
-    bool R;
-};
-
 class Player {
 public:
     Player(bn::sprite_item sprite_item) : 
