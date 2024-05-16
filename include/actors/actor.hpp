@@ -23,32 +23,22 @@ enum direction_t
 
 class Actor {
 public:
-    Actor(bn::sprite_ptr sprite) : 
-        sprite(sprite), 
-        south_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 1, 0, 1, 2
-        )),
-        west_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 4, 3, 4, 5
-        )),
-        east_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 7, 6, 7, 8
-        )),
-        north_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 10, 9, 10, 11
-        )),
+    Actor(bn::sprite_item sprite_item) : 
         direction(Down),
         position(vector2f_t { 0, 0 }),
         fromPosition(vector2f_t { 0, 0 }),
         toPosition(vector2f_t { 0, 0 }),
-        moving(false)
+        moving(false),
+        sprite_item(sprite_item),
+        active_sprite(sprite_item.create_sprite(0, 0)),
+        frame(0),
+        frame_delay(0)
     {
-        
+        active_sprite.set_visible(false);
     };
 
     void init(vector2f_t position);
-    int frame(uint32_t *animcounter);
-    void draw(uint32_t *animcounter);
+    void draw();
     bool will_collide(vector2_t toPosition);
 
     vector2_t getPosition() {
@@ -65,12 +55,13 @@ public:
     direction_t direction;
     vector2f_t fromPosition;
     vector2f_t toPosition;
+    bn::sprite_item sprite_item;
+
+private:
+    bn::sprite_ptr active_sprite;
     bool moving;
-    bn::sprite_ptr sprite;
-    bn::sprite_animate_action<4> south_walking;
-    bn::sprite_animate_action<4> north_walking;
-    bn::sprite_animate_action<4> east_walking;
-    bn::sprite_animate_action<4> west_walking;
+    int frame;
+    int frame_delay;
 };
 
 #endif /* ACTOR_H */

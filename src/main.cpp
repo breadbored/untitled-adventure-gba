@@ -42,9 +42,8 @@ int main()
   map = &overworld_map;
 
   // Create player and player sprite, hide the sprite. This character will exist in every scene.
-  bn::sprite_ptr player_sprite = bn::sprite_items::player.create_sprite(0, 0);
+  bn::sprite_item player_sprite = bn::sprite_items::player;
   player = new Player(player_sprite);
-  player_sprite.set_visible(false);
 
   // Set the background color to black
   bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));

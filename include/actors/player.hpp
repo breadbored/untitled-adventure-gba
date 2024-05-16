@@ -30,8 +30,8 @@ struct controller_state_t {
 
 class Player {
 public:
-    Player(bn::sprite_ptr sprite) : 
-        actor(sprite)
+    Player(bn::sprite_item sprite_item) : 
+        actor(sprite_item)
     {
         
     };
