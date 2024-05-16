@@ -31,21 +31,7 @@ struct controller_state_t {
 class Player {
 public:
     Player(bn::sprite_ptr sprite) : 
-        sprite(sprite), 
-        actor(sprite),
-        south_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 1, 0, 1, 2
-        )),
-        west_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 4, 3, 4, 5
-        )),
-        east_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 7, 6, 7, 8
-        )),
-        north_walking(bn::create_sprite_animate_action_forever(
-            sprite, 12, bn::sprite_items::player.tiles_item(), 10, 9, 10, 11
-        )),
-        direction(Down)
+        actor(sprite)
     {
         
     };
@@ -53,12 +39,6 @@ public:
     void draw();
     
     Actor actor;
-    bn::sprite_ptr sprite;
-    bn::sprite_animate_action<4> south_walking;
-    bn::sprite_animate_action<4> north_walking;
-    bn::sprite_animate_action<4> east_walking;
-    bn::sprite_animate_action<4> west_walking;
-    direction_t direction;
-};;
+};
 
 #endif /* __PLAYER_H */

@@ -10,6 +10,8 @@
 #include "bn_core.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_item.h"
+#include "bn_sprite_items_player.h"
+#include "bn_sprite_animate_actions.h"
 
 enum direction_t
 {
@@ -21,15 +23,27 @@ enum direction_t
 
 class Actor {
 public:
-    Actor(bn::sprite_ptr sprite) : sprite(sprite) {
-        this->position = {0, 0};
-        this->moving = false;
-        this->movementCounter = 0;
-        this->movementDelay = 0;
-        this->direction = Down;
-        this->fromPosition = {0, 0};
-        this->toPosition = {0, 0};
-        this->sprite = sprite;
+    Actor(bn::sprite_ptr sprite) : 
+        sprite(sprite), 
+        south_walking(bn::create_sprite_animate_action_forever(
+            sprite, 12, bn::sprite_items::player.tiles_item(), 1, 0, 1, 2
+        )),
+        west_walking(bn::create_sprite_animate_action_forever(
+            sprite, 12, bn::sprite_items::player.tiles_item(), 4, 3, 4, 5
+        )),
+        east_walking(bn::create_sprite_animate_action_forever(
+            sprite, 12, bn::sprite_items::player.tiles_item(), 7, 6, 7, 8
+        )),
+        north_walking(bn::create_sprite_animate_action_forever(
+            sprite, 12, bn::sprite_items::player.tiles_item(), 10, 9, 10, 11
+        )),
+        direction(Down),
+        position(vector2f_t { 0, 0 }),
+        fromPosition(vector2f_t { 0, 0 }),
+        toPosition(vector2f_t { 0, 0 }),
+        moving(false)
+    {
+        
     };
 
     void init(vector2f_t position);
@@ -48,13 +62,15 @@ public:
     }
 
     vector2f_t position;
-    bool moving;
-    uint8_t movementCounter;
-    uint8_t movementDelay;
     direction_t direction;
     vector2f_t fromPosition;
     vector2f_t toPosition;
+    bool moving;
     bn::sprite_ptr sprite;
+    bn::sprite_animate_action<4> south_walking;
+    bn::sprite_animate_action<4> north_walking;
+    bn::sprite_animate_action<4> east_walking;
+    bn::sprite_animate_action<4> west_walking;
 };
 
 #endif /* ACTOR_H */

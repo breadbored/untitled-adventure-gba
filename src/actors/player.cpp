@@ -2,9 +2,8 @@
 #include "globals.h"
 #include "utils.hpp"
 #include "actors/player.hpp"
+#include "actors/actor.hpp"
 #include "bn_sprite_items_player.h"
-
-static const uint8_t movementDelayThreshold = 2;
 
 void Player::init(vector2f_t position)
 {
@@ -16,22 +15,22 @@ void Player::draw()
 {
     // Direction
     // Since multiple directions can be held, we separate the statements
-    // if (bn::keypad::left_held() && !player->direction == Left && buttonPresses[Left] == 0) {
+    // if (bn::keypad::left_held() && !this->direction == Left && buttonPresses[Left] == 0) {
     //   buttonPresses[Left] = button_timer.elapsed_ticks();
     // } else if (!bn::keypad::left_held()) {
     //   buttonPresses[Left] = 0;
     // }
-    // if (bn::keypad::right_held() && !player->direction == Right && buttonPresses[Right] == 0) {
+    // if (bn::keypad::right_held() && !this->direction == Right && buttonPresses[Right] == 0) {
     //   buttonPresses[Right] = button_timer.elapsed_ticks();
     // } else if (!bn::keypad::right_held()) {
     //   buttonPresses[Right] = 0;
     // }
-    // if (bn::keypad::up_held() && !player->direction == Up && buttonPresses[Up] == 0) {
+    // if (bn::keypad::up_held() && !this->direction == Up && buttonPresses[Up] == 0) {
     //   buttonPresses[Up] = button_timer.elapsed_ticks();
     // } else if (!bn::keypad::up_held()) {
     //   buttonPresses[Up] = 0;
     // }
-    // if (bn::keypad::down_held() && !player->direction == Down && buttonPresses[Down] == 0) {
+    // if (bn::keypad::down_held() && !this->direction == Down && buttonPresses[Down] == 0) {
     //   buttonPresses[Down] = button_timer.elapsed_ticks();
     // } else if (!bn::keypad::down_held()) {
     //   buttonPresses[Down] = 0;
@@ -47,16 +46,16 @@ void Player::draw()
     // }
     // // Set the player direction to the most recent button press
     // if (mostRecentPress != 0) {
-    //     player->direction = mostRecentDirection;
+    //     this->direction = mostRecentDirection;
     // }
     if (bn::keypad::left_held()) {
-      player->direction = Left;
+      this->actor.direction = Left;
     } else if (bn::keypad::right_held()) {
-      player->direction = Right;
+      this->actor.direction = Right;
     } else if (bn::keypad::up_held()) {
-      player->direction = Up;
+      this->actor.direction = Up;
     } else if (bn::keypad::down_held()) {
-      player->direction = Down;
+      this->actor.direction = Down;
     }
 
     // "Physics"
@@ -90,37 +89,37 @@ void Player::draw()
     //     ), 
     //   debug_text
     // );
-    player->actor.position.x += normalized.x;
-    player->actor.position.y += normalized.y;
-    player->sprite.set_x(player->actor.getPosition().x);
-    player->sprite.set_y(player->actor.getPosition().y);
+    this->actor.position.x += normalized.x;
+    this->actor.position.y += normalized.y;
+    this->actor.sprite.set_x(this->actor.getPosition().x);
+    this->actor.sprite.set_y(this->actor.getPosition().y);
 
     // Animation
     // Since we can only draw one direction at a time, we combine the statements
     if (bn::keypad::down_held() && normalized.y != 0) {
-      player->south_walking.update();
+      this->actor.south_walking.update();
 
-      player->north_walking.reset();
-      player->west_walking.reset();
-      player->east_walking.reset();
+      this->actor.north_walking.reset();
+      this->actor.west_walking.reset();
+      this->actor.east_walking.reset();
     } else if (bn::keypad::up_held() && normalized.y != 0) {
-      player->north_walking.update();
+      this->actor.north_walking.update();
 
-      player->south_walking.reset();
-      player->west_walking.reset();
-      player->east_walking.reset();
+      this->actor.south_walking.reset();
+      this->actor.west_walking.reset();
+      this->actor.east_walking.reset();
     } else if (bn::keypad::right_held() && normalized.x != 0) {
-      player->east_walking.update();
+      this->actor.east_walking.update();
 
-      player->south_walking.reset();
-      player->north_walking.reset();
-      player->west_walking.reset();
+      this->actor.south_walking.reset();
+      this->actor.north_walking.reset();
+      this->actor.west_walking.reset();
     } else if (bn::keypad::left_held() && normalized.x != 0) {
-      player->west_walking.update();
+      this->actor.west_walking.update();
 
-      player->south_walking.reset();
-      player->north_walking.reset();
-      player->east_walking.reset();
+      this->actor.south_walking.reset();
+      this->actor.north_walking.reset();
+      this->actor.east_walking.reset();
     }
 
     // Idle
@@ -130,18 +129,18 @@ void Player::draw()
       !bn::keypad::up_held() &&
       !bn::keypad::down_held()
     ) {
-      if (player->direction == Down) {
-        player->south_walking.reset();
-        player->south_walking.update();
-      } else if (player->direction == Up) {
-        player->north_walking.reset();
-        player->north_walking.update();
-      } else if (player->direction == Left) {
-        player->west_walking.reset();
-        player->west_walking.update();
-      } else if (player->direction == Right) {
-        player->east_walking.reset();
-        player->east_walking.update();
+      if (this->actor.direction == Down) {
+        this->actor.south_walking.reset();
+        this->actor.south_walking.update();
+      } else if (this->actor.direction == Up) {
+        this->actor.north_walking.reset();
+        this->actor.north_walking.update();
+      } else if (this->actor.direction == Left) {
+        this->actor.west_walking.reset();
+        this->actor.west_walking.update();
+      } else if (this->actor.direction == Right) {
+        this->actor.east_walking.reset();
+        this->actor.east_walking.update();
       }
     }
     

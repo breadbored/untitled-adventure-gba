@@ -20,7 +20,7 @@ void demo_scene() {
   // player_sprite.set_bg_priority(1);
 
   // Show player sprite
-  player->sprite.set_visible(true);
+  player->actor.sprite.set_visible(true);
 
   map = &overworld_map;
 
