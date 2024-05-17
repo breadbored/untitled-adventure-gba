@@ -32,7 +32,10 @@ public:
         sprite_item(sprite_item),
         active_sprite(sprite_item.create_sprite(0, 0)),
         frame(0),
-        frame_delay(0)
+        frame_delay(0),
+        enemy(false),
+        health(16),
+        max_health(16)
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
@@ -57,6 +60,10 @@ public:
     vector2f_t fromPosition;
     vector2f_t toPosition;
     bn::sprite_item sprite_item;
+
+    bool enemy;
+    int health;
+    int max_health;
 
 private:
     bn::sprite_ptr active_sprite;

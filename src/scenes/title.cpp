@@ -2,28 +2,45 @@
 
 void title_screen()
 {
+  bn::dmg_music_items::title.play();
+
   bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
   text_generator.set_center_alignment();
-  bn::vector<bn::sprite_ptr, 32> text_sprites;
+  bn::vector<bn::sprite_ptr, 32> studio_name_text;
 
   bn::timer title_timer = bn::timer();
 
-  int titleStartedTime = title_timer.elapsed_ticks();
-  text_generator.generate(0, 0, "BreadCodes Presents", text_sprites);
-
-  while ((title_timer.elapsed_ticks() - titleStartedTime) / 1678 < 60 * 7)
+  // Studio Name
+  int studioStartedTime = title_timer.elapsed_ticks();
+  text_generator.generate(0, 0, "BreadCodes Presents", studio_name_text);
+  while ((title_timer.elapsed_ticks() - studioStartedTime) / 1678 < 60 * 7)
   {
     bn::core::update();
   }
+  // Clear the studio name
+  studio_name_text.clear();
 
-  text_sprites.clear();
+  // Credits
+  bn::vector<bn::sprite_ptr, 32> credits_text;
+  int creditsStartedTime = title_timer.elapsed_ticks();
+  text_generator.generate(0, -30, "Credits to", credits_text);
+  text_generator.generate(0, 0, "Jason C", credits_text);
+  text_generator.generate(0, 15, "Nicholas B", credits_text);
+  text_generator.generate(0, 30, "Jenna C", credits_text);
+  while ((title_timer.elapsed_ticks() - creditsStartedTime) / 1678 < 60 * 7)
+  {
+    bn::core::update();
+  }
+  // Clear the credits
+  credits_text.clear();
 
-  // text_generator.generate(0, 0, "Untitled Adventure", text_sprites);
-
+  // Title Background
   bn::regular_bg_ptr title_bg = bn::regular_bg_items::title.create_bg((256 - 240) / 2, (256 - 160) / 2);
   title_bg.set_blending_enabled(true);
   double title_bg_alpha = 0.0;
   bool title_bg_fade_in_complete = false;
+  // Press Start Text
+  bn::vector<bn::sprite_ptr, 32> press_start_text;
 
   while (true)
   {
@@ -31,7 +48,7 @@ void title_screen()
     if (title_bg_alpha < 1.0)
         title_bg_alpha += 0.01;
     else if (title_bg_alpha > 1.0 && !title_bg_fade_in_complete) {
-        text_generator.generate(0, 50, "Press Start", text_sprites);
+        text_generator.generate(0, 50, "Press Start", press_start_text);
         title_bg_fade_in_complete = true;
     }
 
@@ -45,4 +62,6 @@ void title_screen()
 
     bn::core::update();
   }
+
+  bn::dmg_music::stop();
 }
