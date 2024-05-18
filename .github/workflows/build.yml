@@ -31,6 +31,13 @@ jobs:
         run: |
           echo "DEVKITARM=${DEVKITPRO}/devkitARM" >> $GITHUB_ENV
           echo "PATH=${DEVKITARM}/bin:${PATH}" >> $GITHUB_ENV
+
+      - name: Debug
+        run: |
+          echo $DEVKITPRO
+          echo $DEVKITARM
+          echo $PATH
+          ls -la .
       
       - name: Build .gba file
         run: |
