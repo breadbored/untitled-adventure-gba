@@ -6,9 +6,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     container:
-      image: devkitpro/toolchain-base
-      env:
-        TEST: true
+      image: developerforhire/gba-dkp-base:0.0.1
       volumes:
         - .:/volume_mount
       options: --cpus 1
@@ -17,34 +15,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-      
-      - name: Install GBA toolchain
-        run: |
-          dkp-pacman -Syyu --noconfirm && dkp-pacman -S --needed --noconfirm gba-dev && dkp-pacman -S --needed --noconfirm armv4t-portlibs && yes | dkp-pacman -Scc
-        env:
-          HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
-
-      - name: Install Python 3.12
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository ppa:deadsnakes/ppa
-          sudo apt-get update
-          sudo apt-get install -y python3.12
-          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-          sudo update-alternatives --set python3 /usr/bin/python3.12
 
       - name: Add DevKitArm to PATH
         run: |
           echo "DEVKITARM=${DEVKITPRO}/devkitARM" >> $GITHUB_ENV
           echo "PATH=${DEVKITARM}/bin:${PATH}" >> $GITHUB_ENV
-
-      - name: Debug
-        run: |
-          echo $DEVKITPRO
-          echo $DEVKITARM
-          echo $PATH
-          ls -la .
       
       - name: Build .gba file
         run: |
