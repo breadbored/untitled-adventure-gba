@@ -28,6 +28,7 @@
 TARGET      :=  $(notdir $(CURDIR))
 BUILD       :=  build
 LIBBUTANO   :=  engine/butano
+LIBBUTANOABS :=	$(realpath engine/butano)
 PYTHON      :=  python3
 SOURCES     :=  src engine/common/src
 INCLUDES    :=  include engine/common/include
