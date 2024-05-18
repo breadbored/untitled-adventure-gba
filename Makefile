@@ -64,4 +64,4 @@ endif
 include $(LIBBUTANOABS)/butano.mak
 
 assets:
-	python "scripts/make_map.py"
+	python3.12 "scripts/make_map.py"

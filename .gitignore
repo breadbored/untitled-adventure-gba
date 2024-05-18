@@ -13,5 +13,5 @@ build/
 *.cxxflags
 engine/
 .py_venv/
-maps/preprocess/
+maps/preprocess/*.png
 .secrets

@@ -8,7 +8,7 @@ jobs:
     container:
       image: developerforhire/gba-dkp-base:0.0.1
       volumes:
-        - .:/volume_mount
+        - :/volume_mount
       options: --cpus 1
     steps:
       - name: Checkout code
@@ -21,6 +21,17 @@ jobs:
           echo "DEVKITARM=${DEVKITPRO}/devkitARM" >> $GITHUB_ENV
           echo "PATH=${DEVKITARM}/bin:${PATH}" >> $GITHUB_ENV
       
+      - name: Debug
+        run: |
+          echo $DEVKITARM
+          echo $PATH
+          python3.12 --version
+          ls -l /volume_mount
+      
+      - name: Install Python 3.12 dependencies
+        run: |
+          python3.12 -m pip install -r requirements.txt
+  
       - name: Build .gba file
         run: |
           make assets
