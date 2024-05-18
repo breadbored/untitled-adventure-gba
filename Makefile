@@ -56,3 +56,6 @@ endif
 # Include main makefile:
 #---------------------------------------------------------------------------------------------------------------------
 include $(LIBBUTANOABS)/butano.mak
+
+assets:
+	python "scripts/make_map.py"
