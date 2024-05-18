@@ -24,6 +24,16 @@ jobs:
         env:
           HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
 
+      - name: Install Python 3.12
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y python3.12
+          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+          sudo update-alternatives --set python3 /usr/bin/python3.12
+
       - name: Add DevKitArm to PATH
         run: |
           echo "DEVKITARM=${DEVKITPRO}/devkitARM" >> $GITHUB_ENV
