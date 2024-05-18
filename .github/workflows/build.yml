@@ -15,11 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Checkout submodules
-        run: |
-          git config --global --add safe.directory /__w/untitled-adventure-gba/untitled-adventure-gba
-          git submodule update --init --recursive
+      with:
+        # token: ${{ secrets.CI_TOKEN }}
+        submodules: true
       
       - name: Install GBA toolchain
         run: |
