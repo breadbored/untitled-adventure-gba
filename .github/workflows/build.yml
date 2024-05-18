@@ -15,9 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      with:
-        # token: ${{ secrets.CI_TOKEN }}
-        submodules: true
+        with:
+          submodules: true
       
       - name: Install GBA toolchain
         run: |
