@@ -76,7 +76,7 @@ Our current license is primarily to stop paid distributions on cheap 5000-in-1 c
 Contributors to this project include:
 
 
-- [Myself](https://github.com/breadbored)
+- [Jason C](https://github.com/breadbored)
 	- Development
 	- Game Co-Director
 
