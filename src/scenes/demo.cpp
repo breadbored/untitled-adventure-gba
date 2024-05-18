@@ -6,6 +6,9 @@
 #include "bn_format.h"
 #include "bn_sprite_animate_actions.h"
 #include "bn_sprite_items_heart_containers.h"
+#include "bn_camera_actions.h"
+#include "bn_rect_window.h"
+#include "bn_regular_bg_items_title.h"
 
 #define MAX_BUTTON_PRESSES 4
 
@@ -19,10 +22,15 @@ void demo_scene() {
   // text_generator.generate(0, -50, "Demo Scene", text_sprites);
 
   map = &overworld_map;
+  bn::regular_bg_ptr title_bg = bn::regular_bg_items::title.create_bg((256 - 240) / 2, (256 - 160) / 2);
+  bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
+  title_bg.set_camera(camera);
   scene_init();
 
   while (true) {
     player->draw();
+    camera.set_x(player->actor.position.x);
+    camera.set_y(player->actor.position.y);
 
     scene_draw();
 
@@ -35,7 +43,7 @@ bn::optional<bn::sprite_ptr> heart_containers[15];
 void scene_init() {
   // Init the health of the player
   for (int i = 0; i < player->actor.max_health / 4; i++) {
-    bn::sprite_ptr heart_container = bn::sprite_items::heart_containers.create_sprite(-(screen_size.x / 2) + 16 + (i * 16), (screen_size.y / 2) - 16);
+    bn::sprite_ptr heart_container = bn::sprite_items::heart_containers.create_sprite(-(screen_size.x / 2) + 16 + (i * 12), -(screen_size.y / 2) + 16);
     heart_container.set_visible(false);
     heart_containers[i] = heart_container;
   }

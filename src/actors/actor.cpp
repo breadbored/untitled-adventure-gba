@@ -13,12 +13,15 @@ void Actor::init(vector2f_t position)
 }
 
 void Actor::draw() {
-    // Do not render if the actor is outside the screen
-    vector2f_t screen_coordinates = this->position; //get_screen_coordinates(this->position);
-    if (screen_coordinates.x < -(screen_size.x / 2) || screen_coordinates.x > (screen_size.x / 2) || screen_coordinates.y < -(screen_size.y / 2) || screen_coordinates.y > (screen_size.y / 2)) {
-        this->active_sprite.set_visible(false);
-        this->moving = false;
-        return;
+    // If not a player...
+    if (!this->center) {
+        // Do not render if the actor is outside the screen
+        vector2f_t screen_coordinates = this->position; //get_screen_coordinates(this->position);
+        if (screen_coordinates.x < -(screen_size.x / 2) || screen_coordinates.x > (screen_size.x / 2) || screen_coordinates.y < -(screen_size.y / 2) || screen_coordinates.y > (screen_size.y / 2)) {
+            this->active_sprite.set_visible(false);
+            this->moving = false;
+            return;
+        }
     }
 
     // If we're drawing the sprite, we should make it visible
@@ -69,8 +72,14 @@ void Actor::draw() {
     }
 
     this->position = this->toPosition;
-    this->active_sprite.set_x(this->position.x);
-    this->active_sprite.set_y(this->position.y);
+
+    if (this->center) {
+        this->active_sprite.set_x(0);
+        this->active_sprite.set_y(0);
+    } else {
+        this->active_sprite.set_x(this->position.x);
+        this->active_sprite.set_y(this->position.y);
+    }
 }
 
 bool Actor::will_collide(vector2_t toPosition) {

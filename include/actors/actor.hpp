@@ -35,7 +35,8 @@ public:
         frame_delay(0),
         enemy(false),
         health(16),
-        max_health(16)
+        max_health(16),
+        center(false)
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
@@ -61,6 +62,7 @@ public:
     vector2f_t toPosition;
     bn::sprite_item sprite_item;
 
+    bool center;
     bool enemy;
     int health;
     int max_health;

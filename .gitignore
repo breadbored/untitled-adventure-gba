@@ -12,3 +12,6 @@ build/
 *.cflags
 *.cxxflags
 engine/
+.py_venv/
+bitmap_assets/
+processed_assets/
