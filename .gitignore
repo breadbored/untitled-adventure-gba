@@ -14,3 +14,4 @@ build/
 engine/
 .py_venv/
 maps/preprocess/
+.secrets
