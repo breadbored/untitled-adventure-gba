@@ -8,6 +8,7 @@ jobs:
     container:
       image: devkitpro/toolchain-base
       env:
+        HTTP_PROXY: ${{ secrets.HTTP_PROXY }}
         TEST: true
       volumes:
         - .:/volume_mount
