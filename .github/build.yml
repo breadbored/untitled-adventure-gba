@@ -1,0 +1,41 @@
+name: Build and publish .gba file
+on:
+  push:
+    branches: [ main ]
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/toolchain-base
+      env:
+        TEST: true
+      volumes:
+        - .:/volume_mount
+      options: --cpus 1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Install GBA toolchain
+        run: |
+          dkp-pacman -Syyu --noconfirm && dkp-pacman -S --needed --noconfirm gba-dev && dkp-pacman -S --needed --noconfirm armv4t-portlibs && yes | dkp-pacman -Scc
+      
+      - name: Add DevKitArm to PATH
+        run: |
+          echo "DEVKITARM=${DEVKITPRO}/devkitARM" >> $GITHUB_ENV
+          echo "PATH=${DEVKITARM}/bin:${PATH}" >> $GITHUB_ENV
+      
+      - name: Build .gba file
+        run: |
+          make assets
+          make
+      
+      - name: Publish .gba file to the realeases, using the commit history as the description
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./build/*.gba
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: ${{ github.event.head_commit.message }}
+          tag: ${{ github.sha }}
+          draft: false
+          prerelease: true
