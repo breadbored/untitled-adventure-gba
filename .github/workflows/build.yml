@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
       
       - name: Install GBA toolchain
         run: |
