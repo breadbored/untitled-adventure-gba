@@ -232,7 +232,6 @@ def process_all_maps_in_directory(directory, preprocess_directory, tileset_file)
             generate_headers(xml_file, os.path.splitext(filename)[0])
             print(f"Generated map header for {filename} and saved to include/maps/{os.path.splitext(filename)[0]}_map.h")
 
-# Example usage
 tileset_file = 'maps/raw/tileset.png'
 directory = 'maps/raw/'
 preprocess_directory = 'maps/preprocess/'
