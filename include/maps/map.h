@@ -7,6 +7,8 @@
 #include <math.h>
 #include "utils.hpp"
 #include "bn_sprites.h"
+#include "bn_regular_bg_item.h"
+#include "bn_regular_bg_items_title.h"
 
 typedef enum map_items_t {
     NONE = -1,
@@ -36,13 +38,14 @@ typedef enum map_items_t {
 } map_items_t;
 
 typedef struct map_t {
+    bn::regular_bg_item bg_item;
     int width;
     int height;
-    const int *bg_map;
-    const int *fg0_map;
-    const int *fg1_map;
-    const int *fg2_map;
-    const int *collision_map;
+    const uint16_t *bg_map;
+    const uint16_t *fg0_map;
+    const uint16_t *fg1_map;
+    const uint16_t *collision_map;
+    const uint16_t *spawn_map;
     npc_t **npcs;
     uint8_t npcs_count;
 } map_t;

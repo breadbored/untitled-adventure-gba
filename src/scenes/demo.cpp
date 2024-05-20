@@ -1,14 +1,13 @@
 #include "scenes/demo.hpp"
 #include "globals.h"
 #include "maps/map.h"
-#include "maps/overworld.h"
+#include "maps/overworld_map.h"
 #include "bn_string.h"
 #include "bn_format.h"
 #include "bn_sprite_animate_actions.h"
 #include "bn_sprite_items_heart_containers.h"
 #include "bn_camera_actions.h"
 #include "bn_rect_window.h"
-#include "bn_regular_bg_items_title.h"
 
 #define MAX_BUTTON_PRESSES 4
 
@@ -22,9 +21,9 @@ void demo_scene() {
   // text_generator.generate(0, -50, "Demo Scene", text_sprites);
 
   map = &overworld_map;
-  bn::regular_bg_ptr title_bg = bn::regular_bg_items::title.create_bg((256 - 240) / 2, (256 - 160) / 2);
+  bn::regular_bg_ptr map_bg = map->bg_item.create_bg((256 - 240) / 2, (256 - 160) / 2);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
-  title_bg.set_camera(camera);
+  map_bg.set_camera(camera);
   scene_init();
 
   while (true) {

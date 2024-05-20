@@ -23,7 +23,6 @@
 #include "scenes/demo.cpp"
 #include "actors/actor.cpp"
 #include "actors/player.cpp"
-#include "maps/overworld.h"
 #include "bn_sprite_items_player.h"
 
 SceneType scene;
@@ -39,7 +38,6 @@ int main()
   scene = SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
-  map = &overworld_map;
 
   // Create player and player sprite, hide the sprite. This character will exist in every scene.
   bn::sprite_item player_sprite = bn::sprite_items::player;
