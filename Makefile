@@ -65,3 +65,6 @@ include $(LIBBUTANOABS)/butano.mak
 
 assets:
 	python3.12 "scripts/make_map.py"
+
+assetswin:
+	python3.12 "scripts/make_map.py"
