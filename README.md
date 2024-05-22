@@ -28,6 +28,10 @@ To get started with Untitled Adventure, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/breadbored/untitled-adventure-gba.git` or via Github Desktop
 
+1. `cd` into the project directory
+
+1. Run `git submodule update --init --recursive` to get the Butano library pulled into the project
+
 1. Download Python 3.12 and the Pip package manager
 
 1. Navigate to the project directory: `cd untitled-adventure-gba`
