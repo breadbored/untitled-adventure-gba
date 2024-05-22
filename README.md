@@ -24,33 +24,35 @@ To get started with Untitled Adventure, follow these steps:
 
 1. Follow the [Getting Started Guide](https://gvaliente.github.io/butano/getting_started.html) for Butano, Devkitpro, and DevkitARM (`gba-dev`)
 
-2. Clone the repository: `git clone https://github.com/breadbored/untitled-adventure-gba.git` or via Github Desktop
+1. Download [Tiled](https://thorbjorn.itch.io/tiled/purchase), our choosen map editor. Paying is optional, but it's nice if you do as it is very useful for these types of projects.
 
-3. Download Python 3.12 and the Pip package manager
+1. Clone the repository: `git clone https://github.com/breadbored/untitled-adventure-gba.git` or via Github Desktop
 
-4. Navigate to the project directory: `cd untitled-adventure-gba`
+1. Download Python 3.12 and the Pip package manager
 
-5. Install Python and set up your environment
+1. Navigate to the project directory: `cd untitled-adventure-gba`
+
+1. Install Python and set up your environment
 
     - Linux / MacOS
 
         1. Run `python3 -m venv .py_venv`, or use `python` instead of `python3` if 3.12 is your default
 
-        2. Run `source .py_venv/bin/activate`
+        1. Run `source .py_venv/bin/activate`
 
-        3. Install the required packages `pip install pillow scikit-learn`
+        1. Install the required packages `pip install pillow scikit-learn`
 
     - Windows
 
         1. If you have a preferred virtual environment, use that to set up a new one
 
-        2. Install the required packages `pip install pillow scikit-learn`
+        1. Install the required packages `pip install pillow scikit-learn`
 
-6. Compile the map assets: `make assets`
+1. Compile the map assets: `make assets`
 
-7. Build the GBA ROM: `make`
+1. Build the GBA ROM: `make`
 
-8. Run the game on a Gameboy Advance emulator or flash it to a physical cartridge.
+1. Run the game on a Gameboy Advance emulator or flash it to a physical cartridge.
 
 ## License
 
