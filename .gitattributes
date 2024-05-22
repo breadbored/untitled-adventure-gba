@@ -11,7 +11,12 @@
 *.md text
 *.json text
 *.yml text
-.git* text
+*.tsx text
+*.tmx text
+*.xml text
+.gitattributes text
+.gitignore text
+.gitmodules text
 LICENSE text
 Makefile text
 Dockerfile text
