@@ -49,7 +49,7 @@ void Actor::draw() {
     }
 
     // Animation
-    int animation_frame = (this->frame % 4) - 1;
+    int animation_frame = (this->frame % 4);
     if (animation_frame == 2) animation_frame = 0;
     if (this->moving) {
         if (this->frame_delay++ > 6) {
@@ -62,11 +62,11 @@ void Actor::draw() {
     }
     // Since we can only draw one direction at a time, we combine the statements
     if (this->direction == Down) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(1 + animation_frame));
+        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(0 + animation_frame));
     } else if (this->direction == Up) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(10 + animation_frame));
+        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(12 + animation_frame));
     } else if (this->direction == Right) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(7 + animation_frame));
+        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(8 + animation_frame));
     } else if (this->direction == Left) {
         this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(4 + animation_frame));
     }
