@@ -27,6 +27,7 @@
 #include "bn_sprite_items_player.h"
 
 SaveFiles save_files;
+uint8_t save_index;
 
 SceneType scene;
 vector2_t screen_size;
@@ -39,8 +40,9 @@ int main()
   bn::core::init();
 
   save_files = load_game();
-  save_files = SaveFiles();
-  save_game(save_files);
+  save_index = 0xFF;
+  // save_files = SaveFiles(); // Overwrite the save files with blank saves // Remove this line to keep the save file
+  // save_game(save_files);
 
   scene = SCENE_TITLE_MENU;//SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };

@@ -8,6 +8,7 @@
 #include "save.hpp"
 
 extern SaveFiles save_files;
+extern uint8_t save_index;
 
 extern vector2_t screen_size;
 

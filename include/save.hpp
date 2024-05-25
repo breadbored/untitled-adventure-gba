@@ -4,7 +4,6 @@
 #include "bn_sram.h"
 
 struct SaveFile {
-    uint8_t selected_file;
     int actor_x;
     int actor_y;
 };

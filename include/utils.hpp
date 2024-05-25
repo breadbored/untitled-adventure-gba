@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <cstdint>
+
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BIT32_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c"
 #define BIT_REP(bit)           (bit ? '1' : '0')

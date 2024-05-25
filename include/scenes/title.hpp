@@ -25,6 +25,7 @@
 #include "bn_dmg_music_items_title.h"
 #include "bn_dmg_music_actions.h"
 #include "bn_regular_bg_items_ui_title.h"
+#include "file.hpp"
 
 
 void title_screen();

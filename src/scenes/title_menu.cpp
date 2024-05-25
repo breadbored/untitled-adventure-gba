@@ -23,10 +23,6 @@ void title_menu_screen()
     text_generator_small.generate(0, center_box_y, "File 2", file_2);
     text_generator_small.generate(0, center_box_y + 16, "File 3", file_3);
 
-    // Example of how to overwrite the text
-    // file_1 = bn::vector<bn::sprite_ptr, 32>();
-    // text_generator_small.generate(0, -24, "File 1", file_1);
-
     uint8_t selected_file = 1;
     bool needs_redraw = true;
     while (true)
@@ -50,6 +46,8 @@ void title_menu_screen()
         else if (bn::keypad::a_pressed())
         {
             // Load the file
+            save_index = selected_file - 1;
+            load_file();
             scene = SCENE_DEMO;
             break;
         }
