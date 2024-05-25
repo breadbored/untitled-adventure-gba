@@ -316,11 +316,42 @@ for filename in os.listdir(preprocess_directory):
         print(f"Converted {filename} to BMP and saved to {bmp_path}")
             # write a json file with the same name as the output file
         with open(bmp_json_path, "w") as f:
-            f.write("""
-                {
-                    "type": "regular_bg"
-                }
-            """)
+            f.write("""{
+    "type": "regular_bg"
+}""")
+            
+
+
+# Process all UI containers in a directory
+# This generates the UI images for all TMX files in the directory
+def process_all_ui_in_directory(directory, preprocess_directory, tileset_file):
+    for filename in os.listdir(directory):
+        if filename.endswith('.tmx'):
+            filename_without_extension = os.path.splitext(filename)[0].lower()
+            xml_file = os.path.join(directory, filename)
+            tileset_file = get_png_from_map(filename, directory)
+            output_file = os.path.join(preprocess_directory, filename_without_extension)
+            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png")
+            print(f"Generated map image for {filename} and saved to {output_file}")
+
+tileset_file = 'ui/raw/tileset.png'
+directory = 'ui/raw/'
+preprocess_directory = 'ui/preprocess/'
+process_all_ui_in_directory(directory, preprocess_directory, tileset_file)
+
+# Convert all PNG files in the preprocess directory to BMP
+for filename in os.listdir(preprocess_directory):
+    if filename.endswith('.png'):
+        png_path = os.path.join(preprocess_directory, filename)
+        bmp_path = os.path.join('graphics/', os.path.splitext(filename.lower())[0] + '.bmp')
+        bmp_json_path = os.path.join('graphics/', os.path.splitext(filename.lower())[0] + '.json')
+        convert_png_to_bmp(png_path, bmp_path, color_depth=256)
+        print(f"Converted {filename} to BMP and saved to {bmp_path}")
+            # write a json file with the same name as the output file
+        with open(bmp_json_path, "w") as f:
+            f.write("""{
+    "type": "regular_bg"
+}""")
 
 def process_spritesheet(input_file, output_file, input_sprite_size, output_sprite_size):
     # Parse the input and output sprite sizes
