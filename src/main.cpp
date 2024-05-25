@@ -20,10 +20,13 @@
 #include "globals.h"
 #include "scenes/scenes.hpp"
 #include "scenes/title.cpp"
+#include "scenes/title_menu.cpp"
 #include "scenes/demo.cpp"
 #include "actors/actor.cpp"
 #include "actors/player.cpp"
 #include "bn_sprite_items_player.h"
+
+SaveFiles save_files;
 
 SceneType scene;
 vector2_t screen_size;
@@ -35,7 +38,11 @@ int main()
 {
   bn::core::init();
 
-  scene = SCENE_TITLE;
+  save_files = load_game();
+  save_files = SaveFiles();
+  save_game(save_files);
+
+  scene = SCENE_TITLE_MENU;//SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
 
@@ -56,10 +63,7 @@ int main()
       break;
 
     case SCENE_TITLE_MENU:
-      // TODO: Implement title menu
-      // title_menu();
-      // For now, we'll forward directly to the demo scene
-      scene = SCENE_DEMO;
+      title_menu_screen();
       break;
 
     case SCENE_DEMO:

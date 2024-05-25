@@ -5,6 +5,9 @@
 #include "utils.hpp"
 #include "actors/player.hpp"
 #include "maps/map.h"
+#include "save.hpp"
+
+extern SaveFiles save_files;
 
 extern vector2_t screen_size;
 

@@ -8,6 +8,7 @@
 #include "bn_vector.h"
 #include "bn_timer.h"
 #include "common_variable_8x8_sprite_font.h"
+#include "common_variable_8x16_sprite_font.h"
 #include "bn_display.h"
 #include "bn_blending.h"
 #include "bn_bgs_mosaic.h"
@@ -23,6 +24,8 @@
 #include "globals.h"
 #include "bn_dmg_music_items_title.h"
 #include "bn_dmg_music_actions.h"
+#include "bn_regular_bg_items_ui_title.h"
+
 
 void title_screen();
 
