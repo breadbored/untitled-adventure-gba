@@ -6,8 +6,8 @@
 struct SaveFile {
     int player_position_x;
     int player_position_y;
-    int player_health;
-    int player_max_health;
+    int player_health = 4 * 4;
+    int player_max_health = 4 * 4;
 };
 
 struct SaveFiles {

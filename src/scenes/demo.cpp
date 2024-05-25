@@ -16,7 +16,7 @@ void scene_init();
 void scene_deconstructor();
 void scene_draw();
 
-#define DEBUG 1
+#define DEBUG 0
 
 void demo_scene() {
 #if DEBUG
@@ -46,6 +46,7 @@ void demo_scene() {
       save_file();
       scene_deconstructor();
       scene = SCENE_TITLE_MENU;
+      bn::core::update();
       break;
     }
 
@@ -71,7 +72,7 @@ void scene_init() {
   // Init the health of the player
   for (int i = 0; i < player->actor.max_health / 4; i++) {
     bn::sprite_ptr heart_container = bn::sprite_items::heart_containers.create_sprite(-(screen_size.x / 2) + 16 + (i * 12), -(screen_size.y / 2) + 16);
-    heart_container.set_visible(false);
+    // heart_container.set_visible(true);
     heart_containers[i] = heart_container;
   }
 }

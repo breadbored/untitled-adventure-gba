@@ -49,6 +49,7 @@ void title_menu_screen()
             save_index = selected_file - 1;
             load_file();
             scene = SCENE_DEMO;
+            bn::core::update();
             break;
         }
         if (needs_redraw)
