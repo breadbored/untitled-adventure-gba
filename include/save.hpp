@@ -4,8 +4,10 @@
 #include "bn_sram.h"
 
 struct SaveFile {
-    int actor_x;
-    int actor_y;
+    int player_position_x;
+    int player_position_y;
+    int player_health;
+    int player_max_health;
 };
 
 struct SaveFiles {
