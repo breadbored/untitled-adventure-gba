@@ -181,7 +181,7 @@ def generate_headers(xml_file, map_name):
         f.write(map_c_header)
 
 # This is used for the map image generation
-def create_image_from_xml(xml_file, tileset_file, output_file):
+def create_image_from_xml(xml_file, tileset_file, output_file, ui=False):
     # Parse XML file
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -207,7 +207,7 @@ def create_image_from_xml(xml_file, tileset_file, output_file):
         layer_data = layer.find('data').text.strip().split(',')
 
 
-        if not (layer_name == "ground" or layer_name == "back_objects" or layer_name == "front_objects"):
+        if not ui and not (layer_name == "ground" or layer_name == "back_objects" or layer_name == "front_objects"):
             continue
 
         # Create an image for the current layer
@@ -239,7 +239,7 @@ def process_all_maps_in_directory(directory, preprocess_directory, tileset_file)
             xml_file = os.path.join(directory, filename)
             tileset_file = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png")
+            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", False)
             print(f"Generated map image for {filename} and saved to {output_file}")
             generate_headers(xml_file, os.path.splitext(filename)[0])
             print(f"Generated map header for {filename} and saved to include/maps/{os.path.splitext(filename)[0]}_map.h")
@@ -331,7 +331,7 @@ def process_all_ui_in_directory(directory, preprocess_directory, tileset_file):
             xml_file = os.path.join(directory, filename)
             tileset_file = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png")
+            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", True)
             print(f"Generated map image for {filename} and saved to {output_file}")
 
 tileset_file = 'ui/raw/tileset.png'
@@ -345,7 +345,7 @@ for filename in os.listdir(preprocess_directory):
         png_path = os.path.join(preprocess_directory, filename)
         bmp_path = os.path.join('graphics/', os.path.splitext(filename.lower())[0] + '.bmp')
         bmp_json_path = os.path.join('graphics/', os.path.splitext(filename.lower())[0] + '.json')
-        convert_png_to_bmp(png_path, bmp_path, color_depth=256)
+        convert_png_to_bmp(png_path, bmp_path, color_depth=16)
         print(f"Converted {filename} to BMP and saved to {bmp_path}")
             # write a json file with the same name as the output file
         with open(bmp_json_path, "w") as f:
