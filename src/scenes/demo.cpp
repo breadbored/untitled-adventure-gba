@@ -13,13 +13,17 @@
 #define MAX_BUTTON_PRESSES 4
 
 void scene_init();
+void scene_deconstructor();
 void scene_draw();
 
+#define DEBUG 1
+
 void demo_scene() {
-  // bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
-  // text_generator.set_center_alignment();
-  // bn::vector<bn::sprite_ptr, 32> text_sprites;
-  // text_generator.generate(0, -50, "Demo Scene", text_sprites);
+#if DEBUG
+  bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
+  text_generator.set_center_alignment();
+  bn::vector<bn::sprite_ptr, 32> text_sprites;
+#endif
 
   map = &overworld_map;
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg((256 - 240) / 2, (256 - 160) / 2);
@@ -34,13 +38,26 @@ void demo_scene() {
 
     scene_draw();
 
+
+
     // Save the game on start press
     // TODO: This should be moved to a subscene
     if (bn::keypad::start_pressed()) {
       save_file();
+      scene_deconstructor();
       scene = SCENE_TITLE_MENU;
       break;
     }
+
+#if DEBUG
+    text_sprites.clear();
+    bn::string<32> text;
+    bn::ostringstream text_stream(text);
+    text_stream.append(player->actor.getPosition().x);
+    text_stream.append(",");
+    text_stream.append(player->actor.getPosition().y);
+    text_generator.generate(0, -50, text, text_sprites);
+#endif
 
     bn::core::update();
   }
@@ -49,11 +66,22 @@ void demo_scene() {
 bn::optional<bn::sprite_ptr> heart_containers[15];
 
 void scene_init() {
+  // Enable the player sprite
+  player->actor.setVisibility(true);
   // Init the health of the player
   for (int i = 0; i < player->actor.max_health / 4; i++) {
     bn::sprite_ptr heart_container = bn::sprite_items::heart_containers.create_sprite(-(screen_size.x / 2) + 16 + (i * 12), -(screen_size.y / 2) + 16);
     heart_container.set_visible(false);
     heart_containers[i] = heart_container;
+  }
+}
+
+void scene_deconstructor() {
+  // Disable the player sprite
+  player->actor.setVisibility(false);
+  // Deinit the health of the player
+  for (int i = 0; i < player->actor.max_health / 4; i++) {
+    heart_containers[i] = bn::nullopt;
   }
 }
 

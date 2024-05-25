@@ -55,6 +55,9 @@ public:
     vector2_t getToPosition() {
         return vector2_t { (int)this->toPosition.x, (int)this->toPosition.y };
     }
+    void setVisibility(bool visible) {
+        active_sprite.set_visible(visible);
+    }
 
     vector2f_t position;
     direction_t direction;

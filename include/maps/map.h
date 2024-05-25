@@ -57,6 +57,4 @@ typedef struct map_tile_t {
 
 vector2_t get_screen_position(vector2_t position);
 
-void map_draw(map_t *map, bn::sprite_item ***sprite_arr, uint8_t layer);
-
 #endif /* __MAP_H */

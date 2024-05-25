@@ -118,21 +118,3 @@ void draw_section(map_t *map, bn::sprite_item **sprite_arr, const int *tilemap, 
         rdp_draw_sprite( 0, screen_position.x, screen_position.y, MIRROR_DISABLED );
     }
 }
-
-void map_draw(map_t *map, bn::sprite_item ***sprite_arr, uint8_t layer)
-{
-    if (layer == 0) {
-        draw_section(map, (*sprite_arr), map->bg_map, false);
-        return;
-    } else if (layer == 1) {
-        draw_section(map, (*sprite_arr), map->fg0_map, false);
-        return;
-    } else if (layer == 2) {
-        draw_section(map, (*sprite_arr), map->fg1_map, false);
-        return;
-    } else if (layer == 3) {
-        // Since this layer comes after the player (to layer over them), we need to adjust the offset
-        draw_section(map, (*sprite_arr), map->fg2_map, true);
-        return;
-    }
-}
