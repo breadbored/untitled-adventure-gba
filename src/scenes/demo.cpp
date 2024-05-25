@@ -8,6 +8,7 @@
 #include "bn_sprite_items_heart_containers.h"
 #include "bn_camera_actions.h"
 #include "bn_rect_window.h"
+#include "file.hpp"
 
 #define MAX_BUTTON_PRESSES 4
 
@@ -32,6 +33,14 @@ void demo_scene() {
     camera.set_y(player->actor.position.y);
 
     scene_draw();
+
+    // Save the game on start press
+    // TODO: This should be moved to a subscene
+    if (bn::keypad::start_pressed()) {
+      save_file();
+      scene = SCENE_TITLE_MENU;
+      break;
+    }
 
     bn::core::update();
   }
