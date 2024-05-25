@@ -2,8 +2,11 @@
 #define SAVE_H
 
 #include "bn_sram.h"
+#include "bn_string.h"
 
 struct SaveFile {
+    alignas(int) char file_name[16];
+    bool is_new;
     int player_position_x;
     int player_position_y;
     int player_health = 4 * 4;
@@ -11,7 +14,11 @@ struct SaveFile {
 };
 
 struct SaveFiles {
-    SaveFile files[3];
+    SaveFile files[3] = {
+        { "New", true },
+        { "New", true },
+        { "New", true },
+    };
 };
 
 void save_game(SaveFiles save_files_to_save);

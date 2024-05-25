@@ -41,8 +41,8 @@ int main()
 
   save_files = load_game();
   save_index = 0xFF;
-  // save_files = SaveFiles(); // Overwrite the save files with blank saves // Remove this line to keep the save file
-  // save_game(save_files);
+  save_files = SaveFiles(); // Overwrite the save files with blank saves // Remove this line to keep the save files
+  save_game(save_files);
 
   scene = SCENE_TITLE_MENU;//SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };

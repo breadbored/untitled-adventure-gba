@@ -7,7 +7,8 @@ void title_menu_screen()
     bn::vector<bn::sprite_ptr, 32> title_header_text;
 
     bn::sprite_text_generator text_generator_small(common::variable_8x8_sprite_font);
-    text_generator_small.set_center_alignment();
+    text_generator_small.set_left_alignment();
+    bn::vector<bn::sprite_ptr, 2> cursor;
     bn::vector<bn::sprite_ptr, 32> file_1;
     bn::vector<bn::sprite_ptr, 32> file_2;
     bn::vector<bn::sprite_ptr, 32> file_3;
@@ -17,11 +18,13 @@ void title_menu_screen()
 
     text_generator.generate(0, -48, "File Select", title_header_text);
 
-    int center_box_y = 24;
+    int left_file_box_x = -(240 / 2) + 48;
+    int center_file_box_y = 24;
 
-    text_generator_small.generate(0, center_box_y - 16, "File 1", file_1);
-    text_generator_small.generate(0, center_box_y, "File 2", file_2);
-    text_generator_small.generate(0, center_box_y + 16, "File 3", file_3);
+    text_generator_small.generate(left_file_box_x, center_file_box_y - 16,">", cursor);
+    text_generator_small.generate(left_file_box_x, center_file_box_y - 16, save_files.files[0].file_name, file_1);
+    text_generator_small.generate(left_file_box_x, center_file_box_y, save_files.files[1].file_name, file_2);
+    text_generator_small.generate(left_file_box_x, center_file_box_y + 16, save_files.files[2].file_name, file_3);
 
     uint8_t selected_file = 1;
     bool needs_redraw = true;
@@ -54,30 +57,8 @@ void title_menu_screen()
         }
         if (needs_redraw)
         {
-            file_1.clear();
-            file_2.clear();
-            file_3.clear();
-
-            switch (selected_file)
-            {
-            case 1:
-                text_generator_small.generate(0, center_box_y - 16, "> File 1", file_1);
-                text_generator_small.generate(0, center_box_y, "File 2", file_2);
-                text_generator_small.generate(0, center_box_y + 16, "File 3", file_3);
-                break;
-            case 2:
-                text_generator_small.generate(0, center_box_y - 16, "File 1", file_1);
-                text_generator_small.generate(0, center_box_y, "> File 2", file_2);
-                text_generator_small.generate(0, center_box_y + 16, "File 3", file_3);
-                break;
-            case 3:
-                text_generator_small.generate(0, center_box_y - 16, "File 1", file_1);
-                text_generator_small.generate(0, center_box_y, "File 2", file_2);
-                text_generator_small.generate(0, center_box_y + 16, "> File 3", file_3);
-                break;
-            default:
-                break;
-            }
+            cursor.clear();
+            text_generator_small.generate(left_file_box_x - 12, center_file_box_y + ((selected_file - 2) * 16), ">", cursor);
         }
 
         bn::core::update();

@@ -6,6 +6,7 @@
 #include "bn_format.h"
 #include "bn_sprite_animate_actions.h"
 #include "bn_sprite_items_heart_containers.h"
+#include "bn_sprite_items_heart_containers_empty.h"
 #include "bn_camera_actions.h"
 #include "bn_rect_window.h"
 #include "file.hpp"
@@ -64,15 +65,18 @@ void demo_scene() {
   }
 }
 
-bn::optional<bn::sprite_ptr> heart_containers[15];
+bn::optional<bn::sprite_ptr> heart_containers_background[20];
+bn::optional<bn::sprite_ptr> heart_containers[20];
 
 void scene_init() {
   // Enable the player sprite
   player->actor.setVisibility(true);
   // Init the health of the player
   for (int i = 0; i < player->actor.max_health / 4; i++) {
+    bn::sprite_ptr heart_container_background = bn::sprite_items::heart_containers_empty.create_sprite(-(screen_size.x / 2) + 16 + (i * 12), -(screen_size.y / 2) + 16);
     bn::sprite_ptr heart_container = bn::sprite_items::heart_containers.create_sprite(-(screen_size.x / 2) + 16 + (i * 12), -(screen_size.y / 2) + 16);
-    // heart_container.set_visible(true);
+    
+    heart_containers_background[i] = heart_container_background;
     heart_containers[i] = heart_container;
   }
 }
@@ -83,6 +87,7 @@ void scene_deconstructor() {
   // Deinit the health of the player
   for (int i = 0; i < player->actor.max_health / 4; i++) {
     heart_containers[i] = bn::nullopt;
+    heart_containers_background[i] = bn::nullopt;
   }
 }
 
