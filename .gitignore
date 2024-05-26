@@ -16,3 +16,4 @@ engine/
 maps/preprocess/*.png
 sprites/preprocess/*.png
 .secrets
+test/

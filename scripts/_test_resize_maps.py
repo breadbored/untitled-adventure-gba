@@ -31,7 +31,6 @@ def scale_down_images(input_folder, output_folder):
                 # Save the resized image
                 final_img.save(output_path)
 
-# Example usage
 input_folder = 'scripts/test/32x32'
 output_folder = 'scripts/test/16x16'
 

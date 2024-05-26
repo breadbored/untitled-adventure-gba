@@ -50,7 +50,6 @@ def slice_and_center_spritesheet(input_path, output_path, sprite_width, sprite_h
             os.remove(f'temp_sprites/sprite_{row}_{col}.png')
     os.rmdir('temp_sprites')
 
-# Example usage
 input_path = 'Knight-1.png'
 output_path = 'Knight-Converted.png'
 sprite_width = 40  # Change this to the width of your sprite

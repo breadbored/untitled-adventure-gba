@@ -45,7 +45,7 @@ int main()
   save_files = load_game();
   save_index = 0xFF;
 
-  scene = SCENE_TITLE;//SCENE_TITLE_MENU;//SCENE_TITLE;
+  scene = SCENE_TITLE_MENU;//SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
 
@@ -54,11 +54,16 @@ int main()
   player = new Player(player_sprite);
   player->actor.center = true;
 
-  // Set the background color to black
-  bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
+  // Set the transparency color to black
+  // Comment out if you want just the first color in the palette to be transparent
+  // bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
 
   while (true) {
+    // Undo the transparency color change set by some UI scenes
+    bn::bg_palettes::set_transparent_color(bn::color(0x28 * 0.12156862745, 0x33 * 0.12156862745, 0x58 * 0.12156862745));
+
+    // Select the scene to run
     switch (scene)
     {
     case SCENE_TITLE:

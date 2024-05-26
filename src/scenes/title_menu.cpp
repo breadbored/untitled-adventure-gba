@@ -13,6 +13,8 @@ void title_menu_screen()
     bn::vector<bn::sprite_ptr, 32> file_2;
     bn::vector<bn::sprite_ptr, 32> file_3;
     
+    // We are ignoring transparency to add another color, this is wiped between scene changes
+    bn::bg_palettes::set_transparent_color(bn::color(0x28 * 0.12156862745, 0x33 * 0.12156862745, 0x58 * 0.12156862745));
     // The screen is 240x160, but the bg is forced to be 256x256, so we have to do math to offset it
     bn::regular_bg_ptr ui_title_bg = bn::regular_bg_items::ui_title.create_bg((256 - 240) / 2, (256 - 160) / 2); 
 
