@@ -4,6 +4,14 @@
 #include "actors/actor.hpp"
 #include "maps/map.h"
 
+#define DEBUG_COLLISION true
+
+#if DEBUG
+    #if DEBUG_COLLISION
+        #include "bn_log.h"
+    #endif
+#endif
+
 void Actor::init(vector2f_t position)
 {
     this->position = position;
@@ -13,10 +21,13 @@ void Actor::init(vector2f_t position)
 }
 
 void Actor::draw() {
+    if (this->will_collide()) {
+        this->toPosition = this->position;
+    }
     // If not a player...
     if (!this->center) {
         // Do not render if the actor is outside the screen
-        vector2f_t screen_coordinates = this->position; //get_screen_coordinates(this->position);
+        vector2f_t screen_coordinates = this->position;
         if (screen_coordinates.x < -(screen_size.x / 2) || screen_coordinates.x > (screen_size.x / 2) || screen_coordinates.y < -(screen_size.y / 2) || screen_coordinates.y > (screen_size.y / 2)) {
             this->active_sprite.set_visible(false);
             this->moving = false;
@@ -82,47 +93,24 @@ void Actor::draw() {
     }
 }
 
-bool Actor::will_collide(vector2_t toPosition) {
-    // if (&(player->actor) != this) {
-    //     // If NPC is moving, check if it will collide with the player
-    //     if ((player->actor.position.x == toPosition.x && player->actor.position.y == toPosition.y) || (player->actor.toPosition.x == toPosition.x && player->actor.toPosition.y == toPosition.y)) {
-    //         return true;
-    //     }
-    // }
-    // // TODO Implement NPC collision checking
-    // // // NPCs and Player need to check collisions with each other
-    // // for (size_t i = 0; i < npcs_count; i++) {
-    // //     npc_t *npc = npcs[i];
-    // //     if ((npc->actor.position.x == toPosition.x && npc->actor.position.y == toPosition.y) || (npc->actor.toPosition.x == toPosition.x && npc->actor.toPosition.y == toPosition.y)) {
-    // //         return true;
-    // //     }
-    // // }
+bool Actor::will_collide() {
+    // The actor position is center-aligned, but we want the top-left corner coordinates
+    vector2_t actor_position = {
+        this->getPosition().x + (map->width * 16 / 2),
+        this->getPosition().y + (map->height * 16 / 2)
+    };
 
-    // vector2_t toTile = (vector2_t) { toPosition.x / 32, toPosition.y / 32 };
-    // vector2_t fromTile = (vector2_t) { this->fromPosition.x / 32, this->fromPosition.y / 32 };
-    // size_t toIndex = toTile.x + toTile.y * map->width;
-    // size_t fromIndex = fromTile.x + fromTile.y * map->width;
+    // The actors can move in pixel steps, but we need to know what 16x16 tile they are on
+    vector2_t map_position = {
+        actor_position.x / 16,
+        actor_position.y / 16
+    };
 
-    // // Check collisions with walls
-    // if (toTile.x < 0 || toTile.y < 0 || toTile.x >= map->width || toTile.y >= map->height) {
-    //     return true;
-    // }
-    // // Non-conditional collisions have an id of 0, interactive collisions have an id of 1
-    // if (map->collision_map[toIndex] == 0 || map->collision_map[toIndex] == 1) {
-    //     return true;
-    // }
-
-    // // Check collision with foreground objects (implying standing on a raised surface) and green collisions
-    // // Used to keep the player from walking off a ledge
-    // if (map->fg0_map[fromIndex] != NONE && map->collision_map[toIndex] == 3) {
-    //     return true;
-    // }
-
-    // // Check collision with green collisions (implying standing on a lower surface) and foreground objects (a raised surface)
-    // // Used to keep the player from walking up a ledge
-    // if (map->fg0_map[toIndex] != NONE && map->collision_map[fromIndex] == 3) {
-    //     return true;
-    // }
+#if DEBUG_COLLISION
+    // BN_LOG("Player position: ", this->getPosition().x);
+    BN_LOG("Player map position X: ", map_position.x);
+    BN_LOG("Player map position Y: ", map_position.y);
+#endif
     
     return false;
 }

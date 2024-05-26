@@ -44,6 +44,10 @@
         "ostream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "bn_sprite_ptr.h": "c",
+        "bn_core.h": "c",
+        "map.h": "c",
+        "utils.hpp": "c"
     }
 }

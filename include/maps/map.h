@@ -55,6 +55,4 @@ typedef struct map_tile_t {
     vector2_t position;
 } map_tile_t;
 
-vector2_t get_screen_position(vector2_t position);
-
 #endif /* __MAP_H */

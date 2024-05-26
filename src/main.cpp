@@ -1,3 +1,43 @@
+/**
+ * Untitled Adventure
+ * Copyright 2024
+ * BreadCodes / BreadBored
+ * Jason Carpenter
+ * 
+ * This is the main file for the game. It will handle the main loop and scene switching.
+*/
+
+
+/**
+ * This is a compiler flag to enable our own debugging features we want to add.
+ * 
+ * This is a universal flag to turn on/off all other debugging, 
+ *  but should be used in conjunction with other debug flags made for specific purposes.
+ *  i.e. DEBUG_COLLISION, DEBUG_MOVEMENT, DEBUG_SHOW_COORDINATES, etc.
+ *  If you define additional flags, they must depend on if DEBUG is defined and true. For example:
+ * 
+ * #if DEBUG
+ *  #define DEBUG_COLLISION true
+ * #endif
+ * 
+ * #if DEBUG_COLLISION
+ * // Code here to enable collision debugging
+ * #endif
+*/
+#define DEBUG true
+
+
+#ifndef DEBUG
+  #define DEBUG false
+#else
+  // If DEBUG is set and true, we can turn on logging in the mGBA emulator
+  #if DEBUG
+    #define BN_CFG_LOG_ENABLED true
+    #define BN_CFG_LOG_BACKEND BN_LOG_BACKEND_MGBA
+  #endif
+#endif
+
+
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_sprite_ptr.h"

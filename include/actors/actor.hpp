@@ -44,7 +44,7 @@ public:
 
     void init(vector2f_t position);
     void draw();
-    bool will_collide(vector2_t toPosition);
+    bool will_collide();
 
     vector2_t getPosition() {
         return vector2_t { (int)this->position.x, (int)this->position.y };
