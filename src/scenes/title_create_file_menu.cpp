@@ -1,11 +1,11 @@
 #include "scenes/title.hpp"
 
-const bn::string<120> text_rows = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z - . , ! ?     *";
+const bn::string<120> text_rows = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z - . , ! ? \" # $";
 const bn::string<26> text_row_1 = "A B C D E F G H I J K L";
 const bn::string<26> text_row_2 = "M N O P Q R S T U V W X";
 const bn::string<26> text_row_3 = "Y Z a b c d e f g h i j";
 const bn::string<26> text_row_4 = "k l m n o p q r s t u v";
-const bn::string<26> text_row_5 = "w x y z - . , ! ?     *";
+const bn::string<26> text_row_5 = "w x y z - . , ! ? \" # $";
 
 void title_menu_create_file_screen()
 {
