@@ -23,6 +23,25 @@ enum direction_t
 
 class Actor {
 public:
+    Actor(bn::sprite_item sprite_item, bool is_player = false) : 
+        direction(Down),
+        position(vector2f_t { 0, 0 }),
+        fromPosition(vector2f_t { 0, 0 }),
+        toPosition(vector2f_t { 0, 0 }),
+        moving(false),
+        sprite_item(sprite_item),
+        active_sprite(sprite_item.create_sprite(0, 0)),
+        frame(0),
+        frame_delay(0),
+        enemy(false),
+        health(16),
+        max_health(16),
+        center(false),
+        is_player(is_player)
+    {
+        active_sprite.set_visible(false);
+        // active_sprite.dimensions()
+    };
     Actor(bn::sprite_item sprite_item) : 
         direction(Down),
         position(vector2f_t { 0, 0 }),
@@ -36,7 +55,8 @@ public:
         enemy(false),
         health(16),
         max_health(16),
-        center(false)
+        center(false),
+        is_player(false)
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
@@ -65,6 +85,7 @@ public:
     vector2f_t toPosition;
     bn::sprite_item sprite_item;
 
+    bool is_player;
     bool center;
     bool enemy;
     int health;

@@ -92,7 +92,6 @@ int main()
   // Create player and player sprite, hide the sprite. This character will exist in every scene, so it is a global.
   bn::sprite_item player_sprite = bn::sprite_items::player;
   player = new Player(player_sprite);
-  player->actor.center = true;
   
   while (true) {
     // Undo the transparency color change set by some UI scenes

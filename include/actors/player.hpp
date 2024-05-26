@@ -17,10 +17,8 @@
 class Player {
 public:
     Player(bn::sprite_item sprite_item) : 
-        actor(sprite_item)
-    {
-        
-    };
+        actor(sprite_item, true)
+    {};
     void init(vector2f_t position);
     void draw();
     

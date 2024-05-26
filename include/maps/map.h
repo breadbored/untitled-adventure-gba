@@ -55,4 +55,17 @@ typedef struct map_tile_t {
     vector2_t position;
 } map_tile_t;
 
+typedef enum collision_map_t {
+    COLLISION_NONE = 0,
+    COLLISION_SOLID = 1024,
+    COLLISION_BOTTOM_HALF = 1025,
+    COLLISION_TOP_HALF = 1026,
+    COLLISION_RIGHT_HALF = 1027,
+    COLLISION_LEFT_HALF = 1028,
+    COLLISION_TOP_RIGHT_HALF = 1029,
+    COLLISION_BOTTOM_RIGHT_HALF = 1030,
+    COLLISION_BOTTOM_LEFT_HALF = 1031,
+    COLLISION_TOP_LEFT_HALF = 1032,
+} collision_map_t;
+
 #endif /* __MAP_H */

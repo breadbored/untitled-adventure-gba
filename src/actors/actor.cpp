@@ -3,6 +3,9 @@
 #include "utils.hpp"
 #include "actors/actor.hpp"
 #include "maps/map.h"
+#include "bn_sprite_items_collision.h"
+#include "bn_span.h"
+#include "bn_tile.h"
 
 #define DEBUG_COLLISION true
 
@@ -21,13 +24,13 @@ void Actor::init(vector2f_t position)
 }
 
 void Actor::draw() {
-    if (this->will_collide()) {
-        this->toPosition = this->position;
-    }
     // If not a player...
-    if (!this->center) {
+    if (!this->is_player) {
         // Do not render if the actor is outside the screen
-        vector2f_t screen_coordinates = this->position;
+        vector2f_t screen_coordinates = {
+            (this->position.x + (map->width * 16 / 2)),
+            (this->position.y + (map->height * 16 / 2))
+        };
         if (screen_coordinates.x < -(screen_size.x / 2) || screen_coordinates.x > (screen_size.x / 2) || screen_coordinates.y < -(screen_size.y / 2) || screen_coordinates.y > (screen_size.y / 2)) {
             this->active_sprite.set_visible(false);
             this->moving = false;
@@ -59,6 +62,11 @@ void Actor::draw() {
         this->direction = Down;
     }
 
+    
+    if (this->will_collide()) {
+        this->toPosition = this->position;
+    }
+
     // Animation
     int animation_frame = (this->frame % 4) - 1;
     if (animation_frame == 2) animation_frame = 0;
@@ -84,7 +92,7 @@ void Actor::draw() {
 
     this->position = this->toPosition;
 
-    if (this->center) {
+    if (this->is_player) {
         this->active_sprite.set_x(0);
         this->active_sprite.set_y(0);
     } else {
@@ -93,24 +101,98 @@ void Actor::draw() {
     }
 }
 
+int roundNumber(double num) {
+    // Get the integer part of the number
+    int integerPart = static_cast<int>(num);
+    
+    // Get the fractional part of the number
+    float fractionalPart = num - integerPart;
+    
+    // Check if the fractional part is 0.5 or more
+    if (fractionalPart >= 0.5) {
+        // If positive number, round up
+        if (num > 0) {
+            return integerPart + 1;
+        } else { // If negative number, round up (towards zero)
+            return integerPart - 1;
+        }
+    } else {
+        // If fractional part is less than 0.5, round down
+        return integerPart;
+    }
+}
+
 bool Actor::will_collide() {
-    // The actor position is center-aligned, but we want the top-left corner coordinates
-    vector2_t actor_position = {
-        this->getPosition().x + (map->width * 16 / 2),
-        this->getPosition().y + (map->height * 16 / 2)
+    vector2f_t map_position = {
+        (this->position.x + (map->width * 16 / 2)) / 16,
+        (this->position.y + (map->height * 16 / 2)) / 16
+    };
+    vector2f_t map_to_position = {
+        (this->toPosition.x + (map->width * 16 / 2)) / 16,
+        (this->toPosition.y + (map->height * 16 / 2)) / 16
     };
 
-    // The actors can move in pixel steps, but we need to know what 16x16 tile they are on
-    vector2_t map_position = {
-        actor_position.x / 16,
-        actor_position.y / 16
+    // Calculate the integer map positions for array indexing
+    int map_index = (int)map_position.y * map->width + (int)map_position.x;
+    int map_to_index = (int)map_to_position.y * map->width + (int)map_to_position.x;
+
+    // Get the current and target tiles from the collision map
+    collision_map_t current_tile = (collision_map_t)map->collision_map[map_index];
+    collision_map_t collision_tile = (collision_map_t)map->collision_map[map_to_index];
+    if (collision_tile == COLLISION_NONE) {
+        return false;
+    }
+    bn::sprite_tiles_ptr collision_tiles = bn::sprite_items::collision.tiles_item().create_tiles(collision_tile % 1024);
+    bn::optional<bn::span<const bn::tile>> tiles_span = collision_tiles.tiles_ref();
+    bool tile_map[16 * 16] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     };
 
-#if DEBUG_COLLISION
-    // BN_LOG("Player position: ", this->getPosition().x);
-    BN_LOG("Player map position X: ", map_position.x);
-    BN_LOG("Player map position Y: ", map_position.y);
-#endif
+    // Fill in the tile map from the tiles span.
+    // The tiles are 8x8, where each row is a uint32_t of 4 bits that make up a pixel
+    // Each span should be 2 rows and 2 columns of bn:tile
+    for (int i = 0; i < 4; i++) {
+        bn::tile tile = tiles_span.value()[i];
+        uint32_t *tile_data = tile.data;
+        for (int j = 0; j < 8; j++) {
+            uint32_t row = tile_data[j];
+            for (int k = 0; k < 8; k++) {
+                int row_i = (i / 2) * 8 + j;
+                int col_i = (i % 2) * 8 + k;
+                int index_i = row_i * 16 + col_i;
+                tile_map[index_i] = (bool)((row >> (k * 4)) & 0xF);
+            }
+        }
+    }
+
+    // Check if the actor will collide with the tile
+    int center_x = (int)this->toPosition.x % 16;
+    int center_y = (int)this->toPosition.y % 16;
+    return tile_map[center_y * 16 + center_x];
     
     return false;
 }
+
+// #if DEBUG
+//     #if DEBUG_COLLISION
+//         // Log each of the 4 corners of the full 16x16 tile
+//         BN_LOG("\n");
+//         BN_LOG("", tile_map[0], tile_map[15]);
+//         BN_LOG("", tile_map[16 * 15], tile_map[16 * 16 - 1]);
+//     #endif
+// #endif
