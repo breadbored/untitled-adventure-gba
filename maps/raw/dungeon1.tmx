@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
  <tileset firstgid="1" source="dungeon1-tiles.tsx"/>
- <tileset firstgid="257" source="collisions.tsx"/>
+ <tileset firstgid="1025" source="collisions.tsx"/>
  <layer id="1" name="ground" width="16" height="16">
   <data encoding="csv">
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,

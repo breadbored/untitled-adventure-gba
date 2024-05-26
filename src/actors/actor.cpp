@@ -64,7 +64,7 @@ void Actor::draw() {
 
     
     if (this->will_collide()) {
-        this->toPosition = this->position;
+        // this->toPosition = this->position;
     }
 
     // Animation
@@ -136,6 +136,11 @@ bool Actor::will_collide() {
     int map_index = (int)map_position.y * map->width + (int)map_position.x;
     int map_to_index = (int)map_to_position.y * map->width + (int)map_to_position.x;
 
+    // Ensure the indices are within bounds
+    if (map_to_index < 0 || map_to_index >= map->width * map->height) {
+        return true; // Out of bounds, treat as collision
+    }
+
     // Get the current and target tiles from the collision map
     collision_map_t current_tile = (collision_map_t)map->collision_map[map_index];
     collision_map_t collision_tile = (collision_map_t)map->collision_map[map_to_index];
@@ -144,6 +149,8 @@ bool Actor::will_collide() {
     }
     bn::sprite_tiles_ptr collision_tiles = bn::sprite_items::collision.tiles_item().create_tiles(collision_tile % 1024);
     bn::optional<bn::span<const bn::tile>> tiles_span = collision_tiles.tiles_ref();
+
+    collision_tiles.tiles_ref();
     bool tile_map[16 * 16] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -181,12 +188,42 @@ bool Actor::will_collide() {
     }
 
     // Check if the actor will collide with the tile
-    int center_x = (int)this->toPosition.x % 16;
-    int center_y = (int)this->toPosition.y % 16;
-    return tile_map[center_y * 16 + center_x];
-    
-    return false;
+    int center_to_x = (int)this->toPosition.x % 16;
+    int center_to_y = (int)this->toPosition.y % 16;
+    int center_x = (int)this->position.x % 16;
+    int center_y = (int)this->position.y % 16;
+
+#if DEBUG
+    #if DEBUG_COLLISION
+        // Log each of the 4 corners of the full 16x16 tile
+        BN_LOG("\n");
+        BN_LOG("", tile_map[0], tile_map[15]);
+        BN_LOG("", tile_map[16 * 15], tile_map[16 * 16 - 1]);
+        BN_LOG("", center_to_x, ",", center_to_y, " ", tile_map[center_to_y * 16 + center_to_x]);
+    #endif
+#endif
+
+    bool collides = tile_map[center_to_y * 16 + center_to_x];
+    bool stuck = tile_map[center_y * 16 + center_x] && collides;
+    bool collides_x = tile_map[center_y * 16 + center_to_x];
+    bool collides_y = tile_map[center_to_y * 16 + center_x];
+
+    // Adjust the toPosition if a collision is detected
+    if (collides_x) {
+        this->toPosition.x = this->position.x;
+    }
+    if (collides_y) {
+        this->toPosition.y = this->position.y;
+    }
+
+    // Prevent movement if collision is detected in both x and y directions
+    if (collides_x && collides_y) {
+        this->toPosition = this->position;
+    }
+
+    return collides;
 }
+
 
 // #if DEBUG
 //     #if DEBUG_COLLISION
