@@ -9,6 +9,8 @@
 #include "bn_timer.h"
 #include "common_variable_8x8_sprite_font.h"
 #include "common_variable_8x16_sprite_font.h"
+#include "common_fixed_8x8_sprite_font.h"
+#include "common_fixed_8x16_sprite_font.h"
 #include "bn_display.h"
 #include "bn_blending.h"
 #include "bn_bgs_mosaic.h"

@@ -16,6 +16,10 @@ void title_screen()
   text_generator.generate(0, 0, "BreadCodes Presents", studio_name_text);
   while ((title_timer.elapsed_ticks() - studioStartedTime) / 1678 < 60 * 7)
   {
+    if (bn::keypad::start_held() && bn::keypad::select_held() && bn::keypad::l_held() && bn::keypad::r_held()) {
+      save_files = SaveFiles(); // Overwrite the save files with blank saves // Remove this line to keep the save files
+      save_game(save_files);
+    }
     bn::core::update();
   }
   // Clear the studio name

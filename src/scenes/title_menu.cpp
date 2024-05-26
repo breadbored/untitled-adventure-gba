@@ -51,7 +51,8 @@ void title_menu_screen()
             // Load the file
             save_index = selected_file - 1;
             load_file();
-            scene = SCENE_DEMO;
+            // If the file is new, go to the create file menu. Otherwise, go to the demo scene.
+            scene = save_files.files[save_index].is_new ? SCENE_TITLE_CREATE_FILE_MENU : SCENE_DEMO;
             bn::core::update();
             break;
         }

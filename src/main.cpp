@@ -21,6 +21,7 @@
 #include "scenes/scenes.hpp"
 #include "scenes/title.cpp"
 #include "scenes/title_menu.cpp"
+#include "scenes/title_create_file_menu.cpp"
 #include "scenes/demo.cpp"
 #include "actors/actor.cpp"
 #include "actors/player.cpp"
@@ -39,16 +40,16 @@ int main()
 {
   bn::core::init();
 
+  // Hold start+select+R-Shoulder+L-Shoulder on the "BreadCodes Presents" screen if you'd like to wipe all save data
+  // That code can be found in the first update loop of title_screen()
   save_files = load_game();
   save_index = 0xFF;
-  save_files = SaveFiles(); // Overwrite the save files with blank saves // Remove this line to keep the save files
-  save_game(save_files);
 
-  scene = SCENE_TITLE_MENU;//SCENE_TITLE;
+  scene = SCENE_TITLE;//SCENE_TITLE_MENU;//SCENE_TITLE;
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
 
-  // Create player and player sprite, hide the sprite. This character will exist in every scene.
+  // Create player and player sprite, hide the sprite. This character will exist in every scene, so it is a global.
   bn::sprite_item player_sprite = bn::sprite_items::player;
   player = new Player(player_sprite);
   player->actor.center = true;
@@ -66,6 +67,10 @@ int main()
 
     case SCENE_TITLE_MENU:
       title_menu_screen();
+      break;
+
+    case SCENE_TITLE_CREATE_FILE_MENU:
+      title_menu_create_file_screen();
       break;
 
     case SCENE_DEMO:
