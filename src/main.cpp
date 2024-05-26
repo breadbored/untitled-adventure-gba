@@ -53,12 +53,7 @@ int main()
   bn::sprite_item player_sprite = bn::sprite_items::player;
   player = new Player(player_sprite);
   player->actor.center = true;
-
-  // Set the transparency color to black
-  // Comment out if you want just the first color in the palette to be transparent
-  // bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
-
-
+  
   while (true) {
     // Undo the transparency color change set by some UI scenes
     bn::bg_palettes::set_transparent_color(bn::color(0x28 * 0.12156862745, 0x33 * 0.12156862745, 0x58 * 0.12156862745));
