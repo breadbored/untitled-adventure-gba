@@ -39,6 +39,7 @@ typedef enum map_items_t {
 
 typedef struct map_t {
     bn::regular_bg_item bg_item;
+    bn::regular_bg_item bg_collision_item;
     int width;
     int height;
     const uint16_t *bg_map;

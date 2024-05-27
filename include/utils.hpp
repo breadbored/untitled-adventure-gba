@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <cstdint>
+#include "bn_fixed.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BIT32_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c'%c%c%c%c%c%c%c%c"
@@ -16,8 +17,8 @@ uint32_t rand_bc(void);
 
 struct vector2f_t
 {
-    double x;
-    double y;
+    bn::fixed x;
+    bn::fixed y;
 };
 
 struct vector2_t
@@ -26,20 +27,20 @@ struct vector2_t
     int y;
 };
 
-double lerpf( double a, double b, double t );
+bn::fixed lerpf( bn::fixed a, bn::fixed b, bn::fixed t );
 
-int lerp( int a, int b, double t );
+int lerp( int a, int b, bn::fixed t );
 
-vector2f_t lerp2f( vector2f_t a, vector2f_t b, double t );
+vector2f_t lerp2f( vector2f_t a, vector2f_t b, bn::fixed t );
 
-vector2_t lerp2( vector2_t a, vector2_t b, double t );
+vector2_t lerp2( vector2_t a, vector2_t b, bn::fixed t );
 
-bool are_same(double x, double y);
+bool are_same(bn::fixed x, bn::fixed y);
 
 vector2_t get_screen_coordinates(vector2_t position);
 
 int clamp(int value, int min, int max);
 
-vector2f_t normalize(vector2f_t vector, double length);
+vector2f_t normalize(vector2f_t vector, bn::fixed length);
 
 #endif /* __UTILS_H */

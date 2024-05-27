@@ -12,6 +12,7 @@
 #include "file.hpp"
 
 #define DEBUG_PLAYER_COORDINATES false
+#define DEBUG_COLLISION_MAP true
 
 void scene_init();
 void scene_deconstructor();
@@ -30,10 +31,18 @@ void demo_scene() {
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg(0, 0);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
   map_bg.set_camera(camera);
+#if DEBUG
+  #if DEBUG_COLLISION_MAP
+    bn::regular_bg_ptr map_collision_bg = map->bg_collision_item.create_bg(0, 0);
+    map_collision_bg.set_camera(camera);
+  #endif
+#endif
+
   scene_init();
 
   while (true) {
     player->draw();
+
     camera.set_x(player->actor.position.x);
     camera.set_y(player->actor.position.y);
 

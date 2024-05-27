@@ -56,7 +56,7 @@ def get_png_from_map(map_xml_filename, base_path):
     else:
         return None
 
-def generate_headers(xml_file, map_name):
+def generate_headers(xml_file, map_name, collision=False):
     width = 0
     height = 0
     bg_map = []
@@ -136,6 +136,7 @@ def generate_headers(xml_file, map_name):
     #include "map.h"
     #include "bn_regular_bg_item.h"
     #include "bn_regular_bg_items_{map_c_header_name}.h"
+    {f"#include \"bn_regular_bg_items_{map_c_header_name}_collision.h\"" if collision else ""}
 
     npc_t {map_c_header_name}Npc1;
 
@@ -163,6 +164,7 @@ def generate_headers(xml_file, map_name):
 
     map_t {map_c_header_name}_map = {{
         bn::regular_bg_items::{map_c_header_name},
+        {f"bn::regular_bg_items::{map_c_header_name}_collision" if collision else "bn::nullopt"},
         {map_c_header_name}_map_width,
         {map_c_header_name}_map_height,
         {map_c_header_name}_bg_map,
@@ -181,7 +183,7 @@ def generate_headers(xml_file, map_name):
         f.write(map_c_header)
 
 # This is used for the map image generation
-def create_image_from_xml(xml_file, tileset_file, output_file, ui=False):
+def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=False, ui=False):
     # Parse XML file
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -229,6 +231,55 @@ def create_image_from_xml(xml_file, tileset_file, output_file, ui=False):
     # Save the final map image
     map_image.save(output_file)
 
+    # Generate a collision map image if needed
+    if collision_output and not ui:
+        tileset_file = "raw_assets/collision.png"
+        # Parse XML file
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+
+        # Extract map attributes
+        map_width = int(root.attrib['width'])
+        map_height = int(root.attrib['height'])
+        tile_width = int(root.attrib['tilewidth'])
+        tile_height = int(root.attrib['tileheight'])
+
+        # Load tileset image
+        tileset_image = Image.open(tileset_file)
+        tileset_columns = tileset_image.width // tile_width
+
+        # Create an empty image for the final map
+        map_image = Image.new('RGBA', (map_width * tile_width, map_height * tile_height))
+        # Iterate over each layer in the XML
+        for layer in root.findall('layer'):
+            layer_name = layer.attrib['name']
+            layer_width = int(layer.attrib['width'])
+            layer_height = int(layer.attrib['height'])
+            layer_data = layer.find('data').text.strip().split(',')
+
+
+            if not (layer_name == "collision"):
+                continue
+
+            # Create an image for the current layer
+            layer_image = Image.new('RGBA', (layer_width * tile_width, layer_height * tile_height))
+
+            for y in range(layer_height):
+                for x in range(layer_width):
+                    tile_index = int(layer_data[y * layer_width + x]) % 1024
+                    if tile_index > 0:
+                        tile_index -= 1  # Tileset indices in XML are 1-based
+                        tile_x = (tile_index % tileset_columns) * tile_width
+                        tile_y = (tile_index // tileset_columns) * tile_height
+                        tile = tileset_image.crop((tile_x, tile_y, tile_x + tile_width, tile_y + tile_height))
+                        layer_image.paste(tile, (x * tile_width, y * tile_height))
+
+            # Paste the layer image onto the final map image
+            map_image.paste(layer_image, (0, 0), layer_image)
+
+        # Save the final map image
+        map_image.save(output_file.replace(".png", "_collision.png"))
+
 
 # Process all maps in a directory
 # This generates the map images and map headers for all TMX files in the directory
@@ -239,9 +290,9 @@ def process_all_maps_in_directory(directory, preprocess_directory, tileset_file)
             xml_file = os.path.join(directory, filename)
             tileset_file = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", False)
+            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", True, False)
             print(f"Generated map image for {filename} and saved to {output_file}")
-            generate_headers(xml_file, os.path.splitext(filename)[0])
+            generate_headers(xml_file, os.path.splitext(filename)[0], True)
             print(f"Generated map header for {filename} and saved to include/maps/{os.path.splitext(filename)[0]}_map.h")
 
 tileset_file = 'maps/raw/tileset.png'
@@ -331,7 +382,7 @@ def process_all_ui_in_directory(directory, preprocess_directory, tileset_file):
             xml_file = os.path.join(directory, filename)
             tileset_file = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", True)
+            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", False, True)
             print(f"Generated map image for {filename} and saved to {output_file}")
 
 tileset_file = 'ui/raw/tileset.png'

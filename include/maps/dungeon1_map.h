@@ -25,6 +25,7 @@
     #include "map.h"
     #include "bn_regular_bg_item.h"
     #include "bn_regular_bg_items_dungeon1.h"
+    #include "bn_regular_bg_items_dungeon1_collision.h"
 
     npc_t dungeon1Npc1;
 
@@ -132,6 +133,7 @@
 
     map_t dungeon1_map = {
         bn::regular_bg_items::dungeon1,
+        bn::regular_bg_items::dungeon1_collision,
         dungeon1_map_width,
         dungeon1_map_height,
         dungeon1_bg_map,

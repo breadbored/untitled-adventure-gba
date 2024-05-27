@@ -1,4 +1,5 @@
 #include "scenes/title.hpp"
+#include "bn_fixed.h"
 
 void title_screen()
 {

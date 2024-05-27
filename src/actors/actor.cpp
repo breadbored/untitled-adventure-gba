@@ -6,6 +6,10 @@
 #include "bn_sprite_items_collision.h"
 #include "bn_span.h"
 #include "bn_tile.h"
+#include "bn_regular_bg_actions.h"
+#include "bn_regular_bg_map_cell.h"
+#include "bn_regular_bg_map_cell_info.h"
+#include "bn_fixed.h"
 
 #define DEBUG_COLLISION true
 
@@ -101,12 +105,12 @@ void Actor::draw() {
     }
 }
 
-int roundNumber(double num) {
+int roundNumber(bn::fixed num) {
     // Get the integer part of the number
     int integerPart = static_cast<int>(num);
     
     // Get the fractional part of the number
-    float fractionalPart = num - integerPart;
+    bn::fixed fractionalPart = num - integerPart;
     
     // Check if the fractional part is 0.5 or more
     if (fractionalPart >= 0.5) {
@@ -122,19 +126,97 @@ int roundNumber(double num) {
     }
 }
 
+// bool Actor::will_collide() {
+//     vector2f_t map_position = {
+//         (this->position.x + (map->width * 16 / 2)) / 16,
+//         (this->position.y + (map->height * 16 / 2)) / 16
+//     };
+//     vector2f_t map_to_position = {
+//         (this->toPosition.x + (map->width * 16 / 2)) / 16,
+//         (this->toPosition.y + (map->height * 16 / 2)) / 16
+//     };
+
+//     // if (map_position.x < 0) {
+//     //     map_position.x = 0;
+//     //     this->position.x = 0;
+//     // }
+//     // if (map_position.y < 0) {
+//     //     map_position.y = 0;
+//     //     this->position.y = 0;
+//     // }
+//     // if (map_to_position.x < 0) {
+//     //     map_to_position.x = 0;
+//     //     this->toPosition.x = 0;
+//     // }
+//     // if (map_to_position.y < 0) {
+//     //     map_to_position.y = 0;
+//     //     this->toPosition.y = 0;
+//     // }
+
+
+//     // // Calculate the integer map positions for array indexing
+//     int map_index = (int)map_position.y * map->width + (int)map_position.x;
+//     int map_to_index = (int)map_to_position.y * map->width + (int)map_to_position.x;
+
+//     // // Ensure the indices are within bounds
+//     if ((map_to_index < 0 || map_to_index >= map->width * map->height) || (map_index < 0 || map_index >= map->width * map->height)) {
+//         return true; // Out of bounds, treat as collision
+//     }
+
+// #if DEBUG
+//     #if DEBUG_COLLISION
+//         // Log each of the 4 corners of the full 16x16 tile
+//         BN_LOG("\n");
+//         BN_LOG("Outside of bounds: ", (int)this->position.x, ",", (int)this->position.y, " -> ", (int)this->toPosition.x, ",", (int)this->toPosition.y);
+//         BN_LOG("Outside of bounds: ", (int)map_position.x, ",", (int)map_position.y, " -> ", (int)map_to_position.x, ",", (int)map_to_position.y);
+//     #endif
+// #endif
+
+//     bn::regular_bg_item bg_collision_item = map->bg_collision_item;
+//     const bn::regular_bg_map_item& map_item = bg_collision_item.map_item();
+//     bn::regular_bg_map_cell valid_map_cell = map_item.cell(0, 0);
+//     int valid_tile_index = bn::regular_bg_map_cell_info(valid_map_cell).tile_index();
+// #if DEBUG
+//     #if DEBUG_COLLISION
+//         // Log each of the 4 corners of the full 16x16 tile
+//         BN_LOG("\n");
+//         BN_LOG("Tile Index: ", valid_tile_index);
+//     #endif
+// #endif
+//     bn::point actor_map_position(map_position.x.round_integer(), map_position.y.round_integer());
+//     bn::point new_actor_map_position(map_to_position.x.round_integer(), map_to_position.y.round_integer());
+
+//     bn::regular_bg_map_cell actor_map_cell = map_item.cell(new_actor_map_position);
+//     int actor_tile_index = bn::regular_bg_map_cell_info(actor_map_cell).tile_index();
+
+//     if(actor_tile_index == valid_tile_index)
+//     {
+//         actor_map_position = new_actor_map_position;
+//     }
+
+//     bn::fixed actor_sprite_x = (actor_map_position.x() * 8) - (map_item.dimensions().width() * 4) + 4;
+//     bn::fixed actor_sprite_y = (actor_map_position.y() * 8) - (map_item.dimensions().height() * 4) + 4;
+//     // this->toPosition = vector2f_t { 
+//     //     actor_sprite_x - (map->width * 16 / 2), 
+//     //     actor_sprite_y - (map->height * 16 / 2)
+//     // };
+
+//     return false;
+// }
+
 bool Actor::will_collide() {
     vector2f_t map_position = {
-        (this->position.x + (map->width * 16 / 2)) / 16,
-        (this->position.y + (map->height * 16 / 2)) / 16
+        ((this->position.x.round_integer() + ((map->width * 16) / 2)) / 16) - 1,
+        ((this->position.y.round_integer() + ((map->height * 16) / 2)) / 16) + 1
     };
     vector2f_t map_to_position = {
-        (this->toPosition.x + (map->width * 16 / 2)) / 16,
-        (this->toPosition.y + (map->height * 16 / 2)) / 16
+        ((this->toPosition.x.round_integer() + (map->width * 16 / 2)) / 16) - 1,
+        ((this->toPosition.y.round_integer() + (map->height * 16 / 2)) / 16) + 1
     };
 
     // Calculate the integer map positions for array indexing
-    int map_index = (int)map_position.y * map->width + (int)map_position.x;
-    int map_to_index = (int)map_to_position.y * map->width + (int)map_to_position.x;
+    int map_index = (int)map_position.y.round_integer() * map->width + (int)map_position.x.round_integer();
+    int map_to_index = (int)map_to_position.y.round_integer() * map->width + (int)map_to_position.x.round_integer();
 
     // Ensure the indices are within bounds
     if (map_to_index < 0 || map_to_index >= map->width * map->height) {
@@ -144,76 +226,83 @@ bool Actor::will_collide() {
     // Get the current and target tiles from the collision map
     collision_map_t current_tile = (collision_map_t)map->collision_map[map_index];
     collision_map_t collision_tile = (collision_map_t)map->collision_map[map_to_index];
-    if (collision_tile == COLLISION_NONE) {
+    if (collision_tile == COLLISION_NONE || current_tile == COLLISION_NONE) {
         return false;
     }
-    bn::sprite_tiles_ptr collision_tiles = bn::sprite_items::collision.tiles_item().create_tiles(collision_tile % 1024);
+    bn::sprite_tiles_ptr collision_tiles = bn::sprite_items::collision.tiles_item().create_tiles(collision_tile % 1025);
     bn::optional<bn::span<const bn::tile>> tiles_span = collision_tiles.tiles_ref();
 
-    collision_tiles.tiles_ref();
-    bool tile_map[16 * 16] = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    };
+    bool tile_map[16 * 16] = {0};
 
-    // Fill in the tile map from the tiles span.
-    // The tiles are 8x8, where each row is a uint32_t of 4 bits that make up a pixel
-    // Each span should be 2 rows and 2 columns of bn:tile
+    // Fill in the tile map from the tiles span
     for (int i = 0; i < 4; i++) {
         bn::tile tile = tiles_span.value()[i];
-        uint32_t *tile_data = tile.data;
+        const uint32_t* tile_data = tile.data;
         for (int j = 0; j < 8; j++) {
             uint32_t row = tile_data[j];
             for (int k = 0; k < 8; k++) {
                 int row_i = (i / 2) * 8 + j;
                 int col_i = (i % 2) * 8 + k;
+                // int col_i = ((i % 2) == 0 ? 1 : 0) * 8 + k; // Swapped the order of the columns
                 int index_i = row_i * 16 + col_i;
-                tile_map[index_i] = (bool)((row >> (k * 4)) & 0xF);
+
+                // Extract the 4-bit pixel value
+                // int shift_amount = (7 - k) * 4;
+                int shift_amount = (k) * 4;
+                uint32_t pixel_value = (row >> shift_amount) & 0xF;
+                tile_map[index_i] = pixel_value > 0;
             }
         }
     }
 
     // Check if the actor will collide with the tile
-    int center_to_x = (int)this->toPosition.x % 16;
-    int center_to_y = (int)this->toPosition.y % 16;
-    int center_x = (int)this->position.x % 16;
-    int center_y = (int)this->position.y % 16;
+    int center_to_x = (int)this->toPosition.x.round_integer() % 16;
+    int center_to_y = (int)this->toPosition.y.round_integer() % 16;
+    int center_x = (int)this->position.x.round_integer() % 16;
+    int center_y = (int)this->position.y.round_integer() % 16;
+
+    if (center_to_x < 0) {
+        center_to_x = 16 + center_to_x;
+    }
+    if (center_to_y < 0) {
+        center_to_y = 16 + center_to_y;
+    }
+    if (center_x < 0) {
+        center_x = 16 + center_x;
+    }
+    if (center_y < 0) {
+        center_y = 16 + center_y;
+    }
+    // if (center_to_x == 16) {
+    //     center_to_x = 0;
+    // }
+    // if (center_to_y == 16) {
+    //     center_to_y = 0;
+    // }
+    // if (center_x == 16) {
+    //     center_x = 0;
+    // }
+    // if (center_y == 16) {
+    //     center_y = 0;
+    // }
 
 #if DEBUG
     #if DEBUG_COLLISION
-        // Log each of the 4 corners of the full 16x16 tile
         BN_LOG("\n");
-        BN_LOG("", tile_map[0], tile_map[15]);
-        BN_LOG("", tile_map[16 * 15], tile_map[16 * 16 - 1]);
-        BN_LOG("", center_to_x, ",", center_to_y, " ", tile_map[center_to_y * 16 + center_to_x]);
+        BN_LOG("", center_to_x, ",", center_to_y, "  -  ", center_x, ",", center_y);
     #endif
 #endif
 
     bool collides = tile_map[center_to_y * 16 + center_to_x];
-    bool stuck = tile_map[center_y * 16 + center_x] && collides;
-    bool collides_x = tile_map[center_y * 16 + center_to_x];
-    bool collides_y = tile_map[center_to_y * 16 + center_x];
+    bool collides_x = tile_map[center_to_y * 16 + center_to_x];
+    bool collides_y = tile_map[center_to_y * 16 + center_to_x];
 
     // Adjust the toPosition if a collision is detected
     if (collides_x) {
-        this->toPosition.x = this->position.x;
+        this->toPosition.x = this->position.x.round_integer();
     }
     if (collides_y) {
-        this->toPosition.y = this->position.y;
+        this->toPosition.y = this->position.y.round_integer();
     }
 
     // Prevent movement if collision is detected in both x and y directions
