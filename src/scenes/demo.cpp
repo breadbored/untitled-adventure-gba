@@ -12,7 +12,7 @@
 #include "file.hpp"
 
 #define DEBUG_PLAYER_COORDINATES false
-#define DEBUG_COLLISION_MAP true
+#define DEBUG_COLLISION_MAP false
 
 void scene_init();
 void scene_deconstructor();
