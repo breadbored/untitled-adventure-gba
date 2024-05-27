@@ -35,10 +35,8 @@ void Player::draw()
     this->actor.toPosition.x = this->actor.position.x + normalized.x;
     this->actor.toPosition.y = this->actor.position.y + normalized.y;
 
-#if DEBUG
-  #if DEBUG_FACING_DOT
+#if DEBUG && DEBUG_FACING_DOT
     this->facing_dot.set_position(player->actor.toPosition.x - player->actor.position.x, player->actor.toPosition.y - player->actor.position.y);
-  #endif
 #endif
     
     this->actor.draw();

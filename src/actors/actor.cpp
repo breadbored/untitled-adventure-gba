@@ -13,10 +13,8 @@
 
 #define DEBUG_COLLISION false
 
-#if DEBUG
-    #if DEBUG_COLLISION
-        #include "bn_log.h"
-    #endif
+#if DEBUG && DEBUG_COLLISION
+#include "bn_log.h"
 #endif
 
 void Actor::init(vector2f_t position)
@@ -199,11 +197,9 @@ bool Actor::will_collide() {
         center_y = 16 + center_y;
     }
 
-#if DEBUG
-    #if DEBUG_COLLISION
-        BN_LOG("\n");
-        BN_LOG("", center_to_x, ",", center_to_y, "  -  ", center_x, ",", center_y);
-    #endif
+#if DEBUG && DEBUG_COLLISION
+    BN_LOG("\n");
+    BN_LOG("", center_to_x, ",", center_to_y, "  -  ", center_x, ",", center_y);
 #endif
 
     bool collides = tile_map[center_to_y * 16 + center_to_x];

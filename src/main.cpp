@@ -16,17 +16,17 @@
  *  i.e. DEBUG_COLLISION, DEBUG_MOVEMENT, DEBUG_SHOW_COORDINATES, etc.
  *  If you define additional flags, they must depend on if DEBUG is defined and true. For example:
  * 
- * #if DEBUG
- *  #define DEBUG_COLLISION true
- * #endif
- * 
- * #if DEBUG_COLLISION
+ * #if DEBUG && DEBUG_COLLISION
  * // Code here to enable collision debugging
  * #endif
 */
 #define DEBUG true
 
+// Other flags can be defined here
+// These should all also depend on DEBUG being true
+#define DEBUG_SKIP_TITLE_SCREEN false
 
+// If DEBUG is defined and true, we can turn on logging in the mGBA emulator
 #ifndef DEBUG
   #define DEBUG false
 #else
@@ -36,7 +36,6 @@
     #define BN_CFG_LOG_BACKEND BN_LOG_BACKEND_MGBA
   #endif
 #endif
-
 
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
@@ -85,7 +84,10 @@ int main()
   save_files = load_game();
   save_index = 0xFF;
 
-  scene = SCENE_TITLE_MENU;//SCENE_TITLE;
+  scene = SCENE_TITLE;
+#if DEBUG && DEBUG_SKIP_TITLE_SCREEN
+  scene = SCENE_TITLE_MENU;
+#endif
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
 

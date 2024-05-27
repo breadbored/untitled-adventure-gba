@@ -19,23 +19,19 @@ void scene_deconstructor();
 void scene_draw();
 
 void demo_scene() {
-#if DEBUG
-  #if DEBUG_PLAYER_COORDINATES
-    bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
-    text_generator.set_center_alignment();
-    bn::vector<bn::sprite_ptr, 32> text_sprites;
-  #endif
+#if DEBUG && DEBUG_PLAYER_COORDINATES
+  bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
+  text_generator.set_center_alignment();
+  bn::vector<bn::sprite_ptr, 32> text_sprites;
 #endif
 
   map = &overworld_map;
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg(0, 0);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
   map_bg.set_camera(camera);
-#if DEBUG
-  #if DEBUG_COLLISION_MAP
-    bn::regular_bg_ptr map_collision_bg = map->bg_collision_item.create_bg(0, 0);
-    map_collision_bg.set_camera(camera);
-  #endif
+#if DEBUG && DEBUG_COLLISION_MAP
+  bn::regular_bg_ptr map_collision_bg = map->bg_collision_item.create_bg(0, 0);
+  map_collision_bg.set_camera(camera);
 #endif
 
   scene_init();
@@ -58,8 +54,7 @@ void demo_scene() {
       break;
     }
 
-#if DEBUG
-  #if DEBUG_PLAYER_COORDINATES
+#if DEBUG && DEBUG_PLAYER_COORDINATES
     text_sprites.clear();
     bn::string<32> text;
     bn::ostringstream text_stream(text);
@@ -67,7 +62,6 @@ void demo_scene() {
     text_stream.append(",");
     text_stream.append(player->actor.getPosition().y);
     text_generator.generate(0, -50, text, text_sprites);
-  #endif
 #endif
 
     bn::core::update();
