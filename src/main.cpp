@@ -24,7 +24,8 @@
 
 // Other flags can be defined here
 // These should all also depend on DEBUG being true
-#define DEBUG_SKIP_TITLE_SCREEN true
+#define DEBUG_SKIP_TITLE_SCREEN false
+#define DEBUG_RESET_SAVES false
 
 // If DEBUG is defined and true, we can turn on logging in the mGBA emulator
 #ifndef DEBUG
@@ -88,6 +89,12 @@ int main()
 #if DEBUG && DEBUG_SKIP_TITLE_SCREEN
   scene = SCENE_TITLE_MENU;
 #endif
+
+#if DEBUG_RESET_SAVES
+  save_files = SaveFiles();
+  save_game(save_files);
+#endif
+
   screen_size = vector2_t { 240, 160 };
   screen_relative_position = vector2f_t { 0.0, 0.0 };
 

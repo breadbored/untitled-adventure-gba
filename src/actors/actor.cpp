@@ -11,7 +11,7 @@
 #include "bn_regular_bg_map_cell_info.h"
 #include "bn_fixed.h"
 
-#define DEBUG_COLLISION true
+#define DEBUG_COLLISION false
 
 #if DEBUG && DEBUG_COLLISION
 #include "bn_log.h"
