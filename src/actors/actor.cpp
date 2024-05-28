@@ -11,8 +11,6 @@
 #include "bn_regular_bg_map_cell_info.h"
 #include "bn_fixed.h"
 
-#define DEBUG_COLLISION false
-
 #if DEBUG && DEBUG_COLLISION
 #include "bn_log.h"
 #endif
@@ -103,32 +101,11 @@ void Actor::draw() {
     }
 }
 
-int roundNumber(bn::fixed num) {
-    // Get the integer part of the number
-    int integerPart = static_cast<int>(num);
-    
-    // Get the fractional part of the number
-    bn::fixed fractionalPart = num - integerPart;
-    
-    // Check if the fractional part is 0.5 or more
-    if (fractionalPart >= 0.5) {
-        // If positive number, round up
-        if (num > 0) {
-            return integerPart + 1;
-        } else { // If negative number, round up (towards zero)
-            return integerPart - 1;
-        }
-    } else {
-        // If fractional part is less than 0.5, round down
-        return integerPart;
-    }
-}
-
 vector2_t getTile(int nextX, int nextY) {
     // This is correct, because the map is centered at 0,0 and there is an offset
     return vector2_t {
-        ((nextX + ((map->width * 16) / 2)) / 16) - 1,
-        ((nextY + ((map->height * 16) / 2)) / 16) + 1
+        ((nextX + ((map->width * 16) / 2)) / 16),
+        ((nextY + ((map->height * 16) / 2)) / 16)
     };
 }
 
@@ -149,14 +126,14 @@ int checkPlayerCollision(vector2_t newPosition) {
 
 // Shitty collision system
 bool Actor::will_collide() {
-    vector2f_t directionExact = vector2f_t {
-        this->toPosition.x - this->position.x,
-        this->toPosition.y - this->position.y
-    };
-    vector2_t direction = vector2_t {
-        directionExact.x.round_integer() == 0 ? 0 : directionExact.x.round_integer() / abs(directionExact.x.round_integer()),
-        directionExact.y.round_integer() == 0 ? 0 : directionExact.y.round_integer() / abs(directionExact.y.round_integer())
-    };
+    // vector2f_t directionExact = vector2f_t {
+    //     this->toPosition.x - this->position.x,
+    //     this->toPosition.y - this->position.y
+    // };
+    // vector2_t direction = vector2_t {
+    //     directionExact.x.round_integer() == 0 ? 0 : directionExact.x.round_integer() / abs(directionExact.x.round_integer()),
+    //     directionExact.y.round_integer() == 0 ? 0 : directionExact.y.round_integer() / abs(directionExact.y.round_integer())
+    // };
 
     int currentTileLayer = checkPlayerCollision(vector2_t {this->position.x.round_integer(), this->position.y.round_integer()});
     int nextTileLayer = checkPlayerCollision(vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer()});

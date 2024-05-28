@@ -24,8 +24,12 @@
 
 // Other flags can be defined here
 // These should all also depend on DEBUG being true
-#define DEBUG_SKIP_TITLE_SCREEN false
-#define DEBUG_RESET_SAVES false
+#define DEBUG_SKIP_TITLE_SCREEN false // Skip title screen and go straight to title menu. If you need to delete save data, enable DEBUG_RESET_SAVES
+#define DEBUG_RESET_SAVES false // Delete saves on startup. You can instead hold start+select+R-Shoulder+L-Shoulder on the "BreadCodes Presents" screen to wipe saves
+#define DEBUG_PLAYER_COORDINATES false // Enable the player coordinate logs in the demo scene
+#define DEBUG_COLLISION_MAP false // Enable the collision map in the demo scene
+#define DEBUG_COLLISION false // Enable print statements in Actor::will_collide()
+#define DEBUG_FACING_DOT false // Enable a dot that faces the direction the player is moving
 
 // If DEBUG is defined and true, we can turn on logging in the mGBA emulator
 #ifndef DEBUG

@@ -14,8 +14,6 @@
 #include "bn_sprite_item.h"
 #include "bn_sprite_animate_actions.h"
 
-#define DEBUG_FACING_DOT false
-
 #if DEBUG && DEBUG_FACING_DOT
 #include "bn_sprite_items_debug_dot.h"
 #endif

@@ -11,9 +11,6 @@
 #include "bn_rect_window.h"
 #include "file.hpp"
 
-#define DEBUG_PLAYER_COORDINATES false
-#define DEBUG_COLLISION_MAP false
-
 void scene_init();
 void scene_deconstructor();
 void scene_draw();
