@@ -57,16 +57,22 @@ typedef struct map_tile_t {
 } map_tile_t;
 
 typedef enum collision_map_t {
-    COLLISION_NONE = 0,
-    COLLISION_SOLID = 1024,
-    COLLISION_BOTTOM_HALF = 1025,
-    COLLISION_TOP_HALF = 1026,
-    COLLISION_RIGHT_HALF = 1027,
-    COLLISION_LEFT_HALF = 1028,
-    COLLISION_TOP_RIGHT_HALF = 1029,
-    COLLISION_BOTTOM_RIGHT_HALF = 1030,
-    COLLISION_BOTTOM_LEFT_HALF = 1031,
-    COLLISION_TOP_LEFT_HALF = 1032,
+    COLLISION_NONE = 0,                       // No collision
+    VERTICAL = 1,                   // Vertical collision
+    HORIZONTAL = 2,                 // Horizontal collision
+    DIAGONAL_TOP_LEFT = 3,          // Diagonal collision top-left to bottom-right
+    DIAGONAL_TOP_RIGHT = 4,         // Diagonal collision top-right to bottom-left
+    DIAGONAL_BOTTOM_LEFT = 5,       // Diagonal collision bottom-left to top-right
+    DIAGONAL_BOTTOM_RIGHT = 6,      // Diagonal collision bottom-right to top-left
+    THIN_VERTICAL_LEFT = 7,         // Thin vertical collision on the left side
+    THIN_VERTICAL_RIGHT = 8,        // Thin vertical collision on the right side
+    THIN_HORIZONTAL_TOP = 9,        // Thin horizontal collision on the top side
+    THIN_HORIZONTAL_BOTTOM = 10,     // Thin horizontal collision on the bottom side
+    ROUNDED_TOP_LEFT = 11,           // Rounded edge collision top-left
+    ROUNDED_TOP_RIGHT = 12,          // Rounded edge collision top-right
+    ROUNDED_BOTTOM_LEFT = 13,        // Rounded edge collision bottom-left
+    ROUNDED_BOTTOM_RIGHT = 14,     // Rounded edge collision bottom-right
+    FILLED = 15                    // Filled collision
 } collision_map_t;
 
 #endif /* __MAP_H */

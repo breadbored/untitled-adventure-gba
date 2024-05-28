@@ -24,7 +24,7 @@
 
 // Other flags can be defined here
 // These should all also depend on DEBUG being true
-#define DEBUG_SKIP_TITLE_SCREEN false
+#define DEBUG_SKIP_TITLE_SCREEN true
 
 // If DEBUG is defined and true, we can turn on logging in the mGBA emulator
 #ifndef DEBUG

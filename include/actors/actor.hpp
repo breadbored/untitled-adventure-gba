@@ -56,7 +56,8 @@ public:
         health(16),
         max_health(16),
         center(false),
-        is_player(false)
+        is_player(false),
+        radius(8)
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
@@ -83,6 +84,7 @@ public:
     direction_t direction;
     vector2f_t fromPosition;
     vector2f_t toPosition;
+    uint8_t radius;
     bn::sprite_item sprite_item;
 
     bool is_player;
