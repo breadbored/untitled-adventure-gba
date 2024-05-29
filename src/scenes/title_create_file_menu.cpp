@@ -128,6 +128,10 @@ void title_menu_create_file_screen()
                 {
                     save_files.files[save_index].file_name[i] = file_name[i];
                 }
+                for (int i = file_name.length(); i < 16; i++)
+                {
+                    save_files.files[save_index].file_name[i] = '\0';
+                }
                 save_files.files[save_index].is_new = false;
                 save_game(save_files);
                 scene = SCENE_DEMO;

@@ -43,7 +43,7 @@ void demo_scene() {
     scene_draw();
 
     // Save the game on start press
-    // TODO: This should be moved to a subscene
+    // TODO: This should be moved to a menu subscene
     if (bn::keypad::start_pressed()) {
       save_file();
       scene_deconstructor();
