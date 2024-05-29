@@ -3,7 +3,11 @@
 
 void title_screen()
 {
-  bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::FULL);
+  #if VOLUME_LOW
+    bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::QUARTER);
+  #else 
+    bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::FULL);
+  #endif
   bn::dmg_music_items::title.play();
 
   bn::sprite_text_generator text_generator(common::variable_8x8_sprite_font);
