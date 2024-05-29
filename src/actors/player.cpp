@@ -4,6 +4,7 @@
 #include "actors/player.hpp"
 #include "actors/actor.hpp"
 #include "bn_sprite_items_player.h"
+#include "bn_fixed.h"
 
 void Player::init(vector2f_t position)
 {
@@ -18,20 +19,22 @@ void Player::draw()
     */
 
     // Since multiple directions can be held, we separate the statements
+    bn::fixed movementSpeed = 0.75;
     vector2f_t move = { 0.0, 0.0 };
     if (bn::keypad::left_held() || bn::keypad::left_pressed()) {
-        move.x -= 0.75;
+        move.x -= movementSpeed;
     }
     if (bn::keypad::right_held() || bn::keypad::right_pressed()) {
-        move.x += 0.75;
+        move.x += movementSpeed;
     } 
     if (bn::keypad::up_held() || bn::keypad::up_pressed()) {
-        move.y -= 0.75;
+        move.y -= movementSpeed;
     } 
     if (bn::keypad::down_held() || bn::keypad::down_pressed()) {
-        move.y += 0.75;
+        move.y += movementSpeed;
     }
-    vector2f_t normalized = normalize(move, 0.75);
+    
+    vector2f_t normalized = normalize(move, movementSpeed);
     this->actor.toPosition.x = this->actor.position.x + normalized.x;
     this->actor.toPosition.y = this->actor.position.y + normalized.y;
 

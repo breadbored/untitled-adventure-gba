@@ -12,7 +12,7 @@
 #include "bn_fixed.h"
 
 #if DEBUG && DEBUG_COLLISION
-#include "bn_log.h"
+    #include "bn_log.h"
 #endif
 
 void Actor::init(vector2f_t position)
@@ -104,6 +104,7 @@ vector2_t getTile(int nextX, int nextY) {
     };
 }
 
+//Returns the title layer at the selected position.
 int checkPlayerCollision(vector2_t newPosition) {
     // Get the tile position
     vector2_t tilePosition = getTile(newPosition.x, newPosition.y);
@@ -130,8 +131,27 @@ bool Actor::will_collide() {
     //     directionExact.y.round_integer() == 0 ? 0 : directionExact.y.round_integer() / abs(directionExact.y.round_integer())
     // };
 
+    int xCheck = toPosition.x.round_integer();
+    int yCheck = toPosition.y.round_integer();
+    //Right movement
+    if(this->position.x.round_integer() < this->toPosition.x.round_integer()) {
+        xCheck = toPosition.x.round_integer() + 4;
+    }
+    //Left movement
+    else if(this->position.x.round_integer() > this->toPosition.x.round_integer()) {
+        xCheck = toPosition.x.round_integer() - 5;
+    }
+    //Down movement
+    if(this->position.y.round_integer() < this->toPosition.y.round_integer()) {
+        yCheck = toPosition.y.round_integer() + 4;
+    }
+    //Up movement
+    else if(this->position.y.round_integer() > this->toPosition.y.round_integer()) {
+        yCheck = toPosition.y.round_integer();
+    }
+
     int currentTileLayer = checkPlayerCollision(vector2_t {this->position.x.round_integer(), this->position.y.round_integer()});
-    int nextTileLayer = checkPlayerCollision(vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer()});
+    int nextTileLayer = checkPlayerCollision(vector2_t {xCheck, yCheck});
 
     if (abs(currentTileLayer - nextTileLayer) > 1) {
         this->toPosition = this->position;
