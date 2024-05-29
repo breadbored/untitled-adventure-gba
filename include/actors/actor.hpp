@@ -12,6 +12,8 @@
 #include "bn_sprite_item.h"
 #include "bn_sprite_items_player.h"
 #include "bn_sprite_animate_actions.h"
+#include "bn_cameras.h"
+#include "bn_optional.h"
 
 enum direction_t
 {
@@ -92,9 +94,9 @@ public:
     bool enemy;
     int health;
     int max_health;
+    bn::sprite_ptr active_sprite;
 
 private:
-    bn::sprite_ptr active_sprite;
     bool moving;
     int frame;
     int frame_delay;

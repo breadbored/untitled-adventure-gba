@@ -25,6 +25,7 @@ void demo_scene() {
   map = &overworld_map;
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg(0, 0);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
+  player->actor.active_sprite.set_camera(camera);
   map_bg.set_camera(camera);
 #if DEBUG && DEBUG_COLLISION_MAP
   bn::regular_bg_ptr map_collision_bg = map->bg_collision_item.create_bg(0, 0);

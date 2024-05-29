@@ -92,13 +92,8 @@ void Actor::draw() {
 
     this->position = this->toPosition;
 
-    if (this->is_player) {
-        this->active_sprite.set_x(0);
-        this->active_sprite.set_y(0);
-    } else {
-        this->active_sprite.set_x(this->position.x);
-        this->active_sprite.set_y(this->position.y);
-    }
+    this->active_sprite.set_x(this->position.x);
+    this->active_sprite.set_y(this->position.y);
 }
 
 vector2_t getTile(int nextX, int nextY) {
