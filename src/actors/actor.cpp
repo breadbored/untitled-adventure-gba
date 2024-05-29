@@ -9,6 +9,7 @@
 #include "bn_regular_bg_actions.h"
 #include "bn_regular_bg_map_cell.h"
 #include "bn_regular_bg_map_cell_info.h"
+#include "bn_regular_bg_map_item.h"
 #include "bn_fixed.h"
 
 #define DEBUG_COLLISION true
@@ -206,12 +207,12 @@ int roundNumber(bn::fixed num) {
 
 bool Actor::will_collide() {
     vector2f_t map_position = {
-        ((this->position.x.round_integer() + ((map->width * 16) / 2)) / 16) - 1,
-        ((this->position.y.round_integer() + ((map->height * 16) / 2)) / 16) + 1
+        ((this->position.x.round_integer() + ((map->width * 16) / 2)) / 16),
+        ((this->position.y.round_integer() + ((map->height * 16) / 2)) / 16)
     };
     vector2f_t map_to_position = {
-        ((this->toPosition.x.round_integer() + (map->width * 16 / 2)) / 16) - 1,
-        ((this->toPosition.y.round_integer() + (map->height * 16 / 2)) / 16) + 1
+        ((this->toPosition.x.round_integer() + (map->width * 16 / 2)) / 16),
+        ((this->toPosition.y.round_integer() + (map->height * 16 / 2)) / 16)
     };
 
     // Calculate the integer map positions for array indexing
