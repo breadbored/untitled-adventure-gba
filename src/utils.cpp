@@ -17,6 +17,27 @@ int random_int(int lower, int upper)
     return (rand_bc() % (upper - lower + 1)) + lower;
 }
 
+// I use this Quick Sqrt from Quake III and left in the comments for fun
+// https://en.wikipedia.org/wiki/Fast_inverse_square_root
+// enjoy the fuckery that is bit manipulation
+bn::fixed Q_rsqrt(bn::fixed numberFixed)
+{
+  long i;
+  float x2, y;
+  const float threehalfs = 1.5F;
+  float number = numberFixed.to_float();
+
+  x2 = number * 0.5F;
+  y  = number;
+  i  = * ( long * ) &y;                       // evil floating point bit level hacking
+  i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
+  y  = * ( float * ) &i;
+  y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+  // y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+
+  return y;
+}
+
 bn::fixed lerpf( bn::fixed a, bn::fixed b, bn::fixed t )
 {
     return (1.0f - t) * a + t * b;
@@ -65,7 +86,7 @@ vector2f_t normalize(vector2f_t vector, bn::fixed length) {
     if (vector.x == 0 && vector.y == 0) return vector;
     if (vector.x == 0) return {0, length * (vector.y < 0 ? -1 : 1)};
     if (vector.y == 0) return {length * (vector.x < 0 ? -1 : 1), 0};
-    bn::fixed magnitude = bn::sqrt(vector.x * vector.x + vector.y * vector.y);
+    bn::fixed magnitude = Q_rsqrt(vector.x * vector.x + vector.y * vector.y) * length;
     vector2f_t result;
     result.x = vector.x / magnitude * length;
     result.y = vector.y / magnitude * length;

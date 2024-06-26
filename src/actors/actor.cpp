@@ -63,9 +63,7 @@ void Actor::draw() {
     }
 
     
-    if (this->will_collide()) {
-        // this->toPosition = this->position;
-    }
+    this->check_collision();
 
     // Animation
     int animation_frame = (this->frame % 4) - 1;
@@ -107,35 +105,128 @@ vector2_t getTile(int nextX, int nextY) {
 int checkPlayerCollision(vector2_t newPosition) {
     // Get the tile position
     vector2_t tilePosition = getTile(newPosition.x, newPosition.y);
-    
-    // Calculate the inner tile coordinates (0-15 range)
-    int interTileCoordinateX = (newPosition.x % 16 + 16) % 16;
-    int interTileCoordinateY = (newPosition.y % 16 + 16) % 16;
-    
+
     // Get the 1D array index for collision map
     int collisionIndex = tilePosition.y * map->width + tilePosition.x;
     
     // Retrieve the collision_map_t value and mod it by 1025
-    return (int)(map->collision_map[collisionIndex] % 1025);
+    return (int)(map->collision_map[collisionIndex] % 1024);
+}
+
+bool check_colliding_within_tile(int tile, vector2_t newPosition) {
+    // Calculate the inner tile coordinates (0-15 range)
+    int interTileCoordinateX = (newPosition.x % 16 + 16) % 16;
+    int interTileCoordinateY = (newPosition.y % 16 + 16) % 16;
+    
+    #if DEBUG && DEBUG_COLLISION
+        BN_LOG("Tile: ", tile, "; tileCoordX", interTileCoordinateX, "; tileCoordY", interTileCoordinateY);
+    #endif
+
+    switch (tile) {
+        case COLLISION_NONE:
+            return false;
+        case FILLED:
+            return true;
+        
+        // THIN COLLISIONS (2px wide walls)
+        case THIN_HORIZONTAL_BOTTOM:
+            return interTileCoordinateY > 14;
+        case THIN_HORIZONTAL_TOP:
+            return interTileCoordinateY < 2;
+        case THIN_VERTICAL_RIGHT:
+            return interTileCoordinateX > 14;
+        case THIN_VERTICAL_LEFT:
+            return interTileCoordinateX < 2;
+        case THIN_PADDED_DIAGONAL_TOP_LEFT:
+            return interTileCoordinateY <= -interTileCoordinateX + 16 + 1;
+        case THIN_PADDED_DIAGONAL_BOTTOM_RIGHT:
+            return interTileCoordinateY >= -interTileCoordinateX + 16 - 1;
+        case THIN_PADDED_DIAGONAL_BOTTOM_LEFT:
+            return interTileCoordinateY >= interTileCoordinateX - 1;
+        case THIN_PADDED_DIAGONAL_TOP_RIGHT:
+            return interTileCoordinateY <= interTileCoordinateX + 1;
+        
+        // MID-SIZED COLLISIONS (4px wide walls)
+        case MID_SIZED_HORIZONTAL_BOTTOM:
+            return interTileCoordinateY > 12;
+        case MID_SIZED_HORIZONTAL_TOP:
+            return interTileCoordinateY < 4;
+        case MID_SIZED_VERTICAL_RIGHT:
+            return interTileCoordinateX > 12;
+        case MID_SIZED_VERTICAL_LEFT:
+            return interTileCoordinateX < 4;
+        case MID_PADDED_DIAGONAL_TOP_LEFT:
+            return interTileCoordinateY <= -interTileCoordinateX + 16 + 3;
+        case MID_PADDED_DIAGONAL_BOTTOM_RIGHT:
+            return interTileCoordinateY >= -interTileCoordinateX + 16 - 3;
+        case MID_PADDED_DIAGONAL_BOTTOM_LEFT:
+            return interTileCoordinateY >= interTileCoordinateX - 3;
+        case MID_PADDED_DIAGONAL_TOP_RIGHT:
+            return interTileCoordinateY <= interTileCoordinateX + 3;
+
+        // LARGE COLLISIONS (6px wide walls)
+        case LARGE_HORIZONTAL_BOTTOM:
+            return interTileCoordinateY > 10;
+        case LARGE_HORIZONTAL_TOP:
+            return interTileCoordinateY < 6;
+        case LARGE_VERTICAL_RIGHT:
+            return interTileCoordinateX > 10;
+        case LARGE_VERTICAL_LEFT:
+            return interTileCoordinateX < 6;
+        case LARGE_PADDED_DIAGONAL_TOP_LEFT:
+            return interTileCoordinateY <= -interTileCoordinateX + 16 + 5;
+        case LARGE_PADDED_DIAGONAL_BOTTOM_RIGHT:
+            return interTileCoordinateY >= -interTileCoordinateX + 16 - 5;
+        case LARGE_PADDED_DIAGONAL_BOTTOM_LEFT:
+            return interTileCoordinateY >= interTileCoordinateX - 5;
+        case LARGE_PADDED_DIAGONAL_TOP_RIGHT:
+            return interTileCoordinateY <= interTileCoordinateX + 5;
+
+        // HUGE COLLISIONS (8px wide walls)
+        case HUGE_HORIZONTAL_BOTTOM:
+            return interTileCoordinateY > 8;
+        case HUGE_HORIZONTAL_TOP:
+            return interTileCoordinateY < 8;
+        case HUGE_VERTICAL_RIGHT:
+            return interTileCoordinateX > 8;
+        case HUGE_VERTICAL_LEFT:
+            return interTileCoordinateX < 8;
+        case HUGE_PADDED_DIAGONAL_TOP_LEFT:
+            return interTileCoordinateY <= -interTileCoordinateX + 16 + 7;
+        case HUGE_PADDED_DIAGONAL_BOTTOM_RIGHT:
+            return interTileCoordinateY >= -interTileCoordinateX + 16 - 7;
+        case HUGE_PADDED_DIAGONAL_BOTTOM_LEFT:
+            return interTileCoordinateY >= interTileCoordinateX - 7;
+        case HUGE_PADDED_DIAGONAL_TOP_RIGHT:
+            return interTileCoordinateY <= interTileCoordinateX + 7;
+        
+        // CENTERED SQUARE COLLISION (8px wide walls)
+        default:
+            return false;
+    }
 }
 
 // Shitty collision system
-bool Actor::will_collide() {
-    // vector2f_t directionExact = vector2f_t {
-    //     this->toPosition.x - this->position.x,
-    //     this->toPosition.y - this->position.y
-    // };
-    // vector2_t direction = vector2_t {
-    //     directionExact.x.round_integer() == 0 ? 0 : directionExact.x.round_integer() / abs(directionExact.x.round_integer()),
-    //     directionExact.y.round_integer() == 0 ? 0 : directionExact.y.round_integer() / abs(directionExact.y.round_integer())
-    // };
+bool Actor::check_collision() {
+    int currentTileLayer = checkPlayerCollision(vector2_t {this->position.x.round_integer(), this->position.y.round_integer() + 6});
+    int nextTileLayer = checkPlayerCollision(vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer() + 6});
+    int xNextTileLayer = checkPlayerCollision(vector2_t {this->toPosition.x.round_integer(), this->position.y.round_integer() + 6});
+    int yNextTileLayer = checkPlayerCollision(vector2_t {this->position.x.round_integer(), this->toPosition.y.round_integer() + 6});
 
-    int currentTileLayer = checkPlayerCollision(vector2_t {this->position.x.round_integer(), this->position.y.round_integer()});
-    int nextTileLayer = checkPlayerCollision(vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer()});
+    bool colliding_x = check_colliding_within_tile(xNextTileLayer, vector2_t {this->toPosition.x.round_integer(), this->position.y.round_integer() + 6});
+    bool colliding_y = check_colliding_within_tile(yNextTileLayer, vector2_t {this->position.x.round_integer(), this->toPosition.y.round_integer() + 6});
+    bool colliding = check_colliding_within_tile(nextTileLayer, vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer() + 6});
 
-    if (abs(currentTileLayer - nextTileLayer) > 1) {
+    // Check collision and adjust movement
+    if (colliding) {
+        // Collision in intended position, do not move
         this->toPosition = this->position;
-        return true;
+    } else if (colliding_x) {
+        // Collision in x direction, move only in y direction
+        this->toPosition.x = this->position.x;
+    } else if (colliding_y) {
+        // Collision in y direction, move only in x direction
+        this->toPosition.y = this->position.y;
     }
 
     return false;

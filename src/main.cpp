@@ -24,11 +24,11 @@
 
 // Other flags can be defined here
 // These should all also depend on DEBUG being true
-#define DEBUG_SKIP_TITLE_SCREEN false // Skip title screen and go straight to title menu. If you need to delete save data, enable DEBUG_RESET_SAVES
+#define DEBUG_SKIP_TITLE_SCREEN true // Skip title screen and go straight to title menu. If you need to delete save data, enable DEBUG_RESET_SAVES
 #define DEBUG_RESET_SAVES false // Delete saves on startup. You can instead hold start+select+R-Shoulder+L-Shoulder on the "BreadCodes Presents" screen to wipe saves
 #define DEBUG_PLAYER_COORDINATES false // Enable the player coordinate logs in the demo scene
 #define DEBUG_COLLISION_MAP false // Enable the collision map in the demo scene
-#define DEBUG_COLLISION false // Enable print statements in Actor::will_collide()
+#define DEBUG_COLLISION true // Enable print statements in Actor::check_collision()
 #define DEBUG_FACING_DOT false // Enable a dot that faces the direction the player is moving
 #define VOLUME_LOW true // Set the volume to 25% of the default volume
 
