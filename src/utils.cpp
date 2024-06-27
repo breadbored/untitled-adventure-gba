@@ -38,7 +38,7 @@ int random_int(int lower, int upper)
 //   return y;
 // }
 
-bn::fixed Q_rsqrt(bn::fixed numberFixed) {
+bn::fixed Qsqrt(bn::fixed numberFixed) {
     float number = numberFixed.to_float();
     if (number <= 0.0f) return 0.0f;
     float approx = number * 0.5f;
@@ -96,7 +96,7 @@ vector2f_t normalize(vector2f_t vector, bn::fixed length) {
     if (vector.x == 0 && vector.y == 0) return vector;
     if (vector.x == 0) return {0, length * (vector.y < 0 ? -1 : 1)};
     if (vector.y == 0) return {length * (vector.x < 0 ? -1 : 1), 0};
-    bn::fixed magnitude = Q_rsqrt(vector.x * vector.x + vector.y * vector.y) * length;
+    bn::fixed magnitude = Qsqrt(vector.x * vector.x + vector.y * vector.y) * length;
     vector2f_t result;
     result.x = vector.x / magnitude * length;
     result.y = vector.y / magnitude * length;
