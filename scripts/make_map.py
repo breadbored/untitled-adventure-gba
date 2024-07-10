@@ -263,6 +263,7 @@ def create_image_from_xml(xml_file, tileset_files, output_file, collision_output
     tileset_files = [tileset_path.replace("maps/raw", "ui/raw") if "ui_" in tileset_path else tileset_path for tileset_path in tileset_files]
     tileset_images = [Image.open(tileset_file) for tileset_file in tileset_files]
     tileset_columns = [tileset_image.width // tile_width for tileset_image in tileset_images]
+    tileset_rows = [tileset_image.height // tile_height for tileset_image in tileset_images]
 
     # Create an empty image for the final map
     map_image = Image.new('RGBA', (map_width * tile_width, map_height * tile_height))
@@ -292,8 +293,8 @@ def create_image_from_xml(xml_file, tileset_files, output_file, collision_output
                     tile_y = (tile_index // tileset_columns[tileset_image_index]) * tile_height
 
                     # Find the tileset_image that corresponds to the tile_index, based on the width and height of each tileset
-                    while tile_index >= tileset_columns[tileset_image_index] * (tileset_columns[tileset_image_index] + 1):
-                        tile_index -= tileset_columns[tileset_image_index] * tileset_columns[tileset_image_index]
+                    while tile_index >= tileset_columns[tileset_image_index] * (tileset_rows[tileset_image_index]):
+                        tile_index -= tileset_columns[tileset_image_index] * tileset_rows[tileset_image_index]
                         tileset_image_index += 1
                         tile_x = (tile_index % tileset_columns[tileset_image_index]) * tile_width
                         tile_y = (tile_index // tileset_columns[tileset_image_index]) * tile_height
