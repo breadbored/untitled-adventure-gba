@@ -2,6 +2,8 @@ import os
 import xml.etree.ElementTree as ET
 from PIL import Image
 
+RESERVED_LAYERS = ["ground", "back_objects", "front_objects", "collision", "spawners"]
+
 def get_png_source(tileset_xml_path):
     # Construct the full path to the tileset XML file
     tileset_full_path = os.path.join(tileset_xml_path)
@@ -23,6 +25,30 @@ def get_png_source(tileset_xml_path):
     else:
         return None
 
+def get_png_sources(tileset_xml_paths):
+    # Construct the full path to the tileset XML file
+    tileset_full_paths = [os.path.join(tileset_xml_path) for tileset_xml_path in tileset_xml_paths]
+
+    # Read the tileset XML file
+    image_elements = []
+    for tileset_full_path in tileset_full_paths:
+        with open(tileset_full_path, 'r', encoding='utf-8') as file:
+            tileset_xml_string = file.read()
+        
+        # Parse the XML string
+        root = ET.fromstring(tileset_xml_string)
+        
+        # Find the <image> element
+        image_element = root.find('image')
+        image_elements.append(image_element)
+    
+    # Get the 'source' attribute
+    if image_elements is not None and len(image_elements) > 0:
+        sources = [image_element.get('source') for image_element in image_elements]
+        return sources
+    else:
+        return None
+
 def get_tileset_source(xml_path):
     # Read the tileset XML file
     with open(xml_path, 'r', encoding='utf-8') as file:
@@ -40,19 +66,58 @@ def get_tileset_source(xml_path):
         else:
             return None
 
+def get_all_tilesets_source(xml_path):
+    # Read the tileset XML file
+    with open(xml_path, 'r', encoding='utf-8') as file:
+        xml_string = file.read()
+        # Parse the XML string
+        root = ET.fromstring(xml_string)
+        
+        # # Find the <tileset> element
+        # tileset_element = root.find('tileset')
+        
+        # # Get the 'source' attribute
+        # if tileset_element is not None:
+        #     source = tileset_element.get('source')
+        #     return source
+        # else:
+        #     return None
+        
+        # Find the <tileset> elements
+        tileset_elements = root.findall('tileset')
+        
+        # Get the 'source' attribute
+        if tileset_elements is not None and len(tileset_elements) > 0:
+            sources = [tileset_element.get('source') for tileset_element in tileset_elements]
+            return sources
+        else:
+            return None
+
 def get_png_from_map(map_xml_filename, base_path):
     map_xml_path = os.path.join(base_path, map_xml_filename)
     # Get the tileset source from the map XML
-    tileset_source = get_tileset_source(map_xml_path)
+    # tileset_source = get_tileset_source(map_xml_path)
+    tileset_sources = get_all_tilesets_source(map_xml_path)
     
-    if tileset_source is not None:
+    # if tileset_source is not None:
+    #     # Construct the path to the tileset XML file
+    #     tileset_path = os.path.join(base_path, tileset_source)
+        
+    #     # Get the PNG source from the tileset XML
+    #     png_source = get_png_source(tileset_path)
+        
+    #     return png_source
+    # else:
+    #     return None
+    
+    if tileset_sources is not None:
         # Construct the path to the tileset XML file
-        tileset_path = os.path.join(base_path, tileset_source)
+        tileset_paths = [os.path.join(base_path, tileset_source) for tileset_source in tileset_sources]
         
         # Get the PNG source from the tileset XML
-        png_source = get_png_source(tileset_path)
+        png_sources = get_png_sources(tileset_paths)
         
-        return png_source
+        return png_sources
     else:
         return None
 
@@ -183,7 +248,7 @@ def generate_headers(xml_file, map_name, collision=False):
         f.write(map_c_header)
 
 # This is used for the map image generation
-def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=False, ui=False):
+def create_image_from_xml(xml_file, tileset_files, output_file, collision_output=False, ui=False):
     # Parse XML file
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -195,8 +260,10 @@ def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=
     tile_height = int(root.attrib['tileheight'])
 
     # Load tileset image
-    tileset_image = Image.open(tileset_file)
-    tileset_columns = tileset_image.width // tile_width
+    tileset_files = [tileset_path.replace("maps/raw", "ui/raw") if "ui_" in tileset_path else tileset_path for tileset_path in tileset_files]
+    tileset_images = [Image.open(tileset_file) for tileset_file in tileset_files]
+    tileset_columns = [tileset_image.width // tile_width for tileset_image in tileset_images]
+    tileset_rows = [tileset_image.height // tile_height for tileset_image in tileset_images]
 
     # Create an empty image for the final map
     map_image = Image.new('RGBA', (map_width * tile_width, map_height * tile_height))
@@ -209,7 +276,8 @@ def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=
         layer_data = layer.find('data').text.strip().split(',')
 
 
-        if not ui and not (layer_name == "ground" or layer_name == "back_objects" or layer_name == "front_objects"):
+        # Skip UI layers, reserved layers that are invisible, and layers that are not reserved
+        if not ui and not (layer_name == "ground" or layer_name == "back_objects" or layer_name == "front_objects") and layer_name in RESERVED_LAYERS:
             continue
 
         # Create an image for the current layer
@@ -217,12 +285,21 @@ def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=
 
         for y in range(layer_height):
             for x in range(layer_width):
+                tileset_image_index = 0
                 tile_index = int(layer_data[y * layer_width + x])
                 if tile_index > 0:
                     tile_index -= 1  # Tileset indices in XML are 1-based
-                    tile_x = (tile_index % tileset_columns) * tile_width
-                    tile_y = (tile_index // tileset_columns) * tile_height
-                    tile = tileset_image.crop((tile_x, tile_y, tile_x + tile_width, tile_y + tile_height))
+                    tile_x = (tile_index % tileset_columns[tileset_image_index]) * tile_width
+                    tile_y = (tile_index // tileset_columns[tileset_image_index]) * tile_height
+
+                    # Find the tileset_image that corresponds to the tile_index, based on the width and height of each tileset
+                    while tile_index >= tileset_columns[tileset_image_index] * (tileset_rows[tileset_image_index]):
+                        tile_index -= tileset_columns[tileset_image_index] * tileset_rows[tileset_image_index]
+                        tileset_image_index += 1
+                        tile_x = (tile_index % tileset_columns[tileset_image_index]) * tile_width
+                        tile_y = (tile_index // tileset_columns[tileset_image_index]) * tile_height
+
+                    tile = tileset_images[tileset_image_index].crop((tile_x, tile_y, tile_x + tile_width, tile_y + tile_height))
                     layer_image.paste(tile, (x * tile_width, y * tile_height))
 
         # Paste the layer image onto the final map image
@@ -283,14 +360,14 @@ def create_image_from_xml(xml_file, tileset_file, output_file, collision_output=
 
 # Process all maps in a directory
 # This generates the map images and map headers for all TMX files in the directory
-def process_all_maps_in_directory(directory, preprocess_directory, tileset_file):
+def process_all_maps_in_directory(directory, preprocess_directory):
     for filename in os.listdir(directory):
         if filename.endswith('.tmx'):
             filename_without_extension = os.path.splitext(filename)[0].lower()
             xml_file = os.path.join(directory, filename)
-            tileset_file = get_png_from_map(filename, directory)
+            tileset_files = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", True, False)
+            create_image_from_xml(xml_file, [os.path.join(directory, tileset_file) for tileset_file in tileset_files], output_file + ".png", True, False)
             print(f"Generated map image for {filename} and saved to {output_file}")
             generate_headers(xml_file, os.path.splitext(filename)[0], True)
             print(f"Generated map header for {filename} and saved to include/maps/{os.path.splitext(filename)[0]}_map.h")
@@ -298,7 +375,7 @@ def process_all_maps_in_directory(directory, preprocess_directory, tileset_file)
 tileset_file = 'maps/raw/tileset.png'
 directory = 'maps/raw/'
 preprocess_directory = 'maps/preprocess/'
-process_all_maps_in_directory(directory, preprocess_directory, tileset_file)
+process_all_maps_in_directory(directory, preprocess_directory)
 
 # Raw map images are now in maps/preprocess/, and need to be converted to the correct bmp format for butano
 # Get all files from maps/preprocess/ and convert them to GBA compatible bmp
@@ -380,9 +457,9 @@ def process_all_ui_in_directory(directory, preprocess_directory, tileset_file):
         if filename.endswith('.tmx'):
             filename_without_extension = os.path.splitext(filename)[0].lower()
             xml_file = os.path.join(directory, filename)
-            tileset_file = get_png_from_map(filename, directory)
+            tileset_files = get_png_from_map(filename, directory)
             output_file = os.path.join(preprocess_directory, filename_without_extension)
-            create_image_from_xml(xml_file, os.path.join(directory, tileset_file), output_file + ".png", False, True)
+            create_image_from_xml(xml_file, [os.path.join(directory, tileset_file) for tileset_file in tileset_files], output_file + ".png", False, True)
             print(f"Generated map image for {filename} and saved to {output_file}")
 
 tileset_file = 'ui/raw/tileset.png'
