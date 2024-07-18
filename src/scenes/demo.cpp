@@ -1,7 +1,7 @@
 #include "scenes/demo.hpp"
 #include "globals.h"
 #include "maps/map.h"
-#include "maps/dungeon_all_directions_map.h"
+#include "maps/test_village_map.h"
 #include "bn_string.h"
 #include "bn_format.h"
 #include "bn_sprite_animate_actions.h"
@@ -22,7 +22,7 @@ void demo_scene() {
   bn::vector<bn::sprite_ptr, 32> text_sprites;
 #endif
 
-  map = &dungeon_all_directions_map;
+  map = &test_village_map;
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg(0, 0);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
   player->actor.active_sprite.set_camera(camera);

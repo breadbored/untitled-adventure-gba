@@ -143,11 +143,18 @@ def generate_headers(xml_file, map_name, collision=False):
             map_text += "\n    "
         return map_text
 
-    def parse_layer_data(layer_data, layer_width):
+    def parse_layer_data(layer_data, layer_width, collision_start_tile=0):
+        def convert_gid(g):
+            gid = int(g)
+            if collision_start_tile == 0:
+                return gid
+            return gid % (collision_start_tile - 1)
         # Split the 1D layer data into 2D based on the layer width
         data = layer_data.strip().split(',')
         rows = [data[i:i + layer_width] for i in range(0, len(data), layer_width)]
-        return [list(map(int, row)) for row in rows]
+        res = [list(map(convert_gid, row)) for row in rows]
+
+        return res
 
     # Parse the XML file
     tree = ET.parse(xml_file)
@@ -156,6 +163,13 @@ def generate_headers(xml_file, map_name, collision=False):
     # Extract map dimensions
     width = int(root.attrib['width'])
     height = int(root.attrib['height'])
+
+    collision_start_tile = 0
+    for tileset in root.findall('tileset'):
+        if "collision" in tileset.attrib['source']:
+            first_gid = int(tileset.attrib['firstgid'])
+            if first_gid > collision_start_tile:
+                collision_start_tile = first_gid
 
     # Extract layers data
     for layer in root.findall('layer'):
@@ -169,7 +183,7 @@ def generate_headers(xml_file, map_name, collision=False):
         elif layer_name == "front_objects":
             fg1_map = parse_layer_data(layer_data, layer_width)
         elif layer_name == "collision":
-            collision_map = parse_layer_data(layer_data, layer_width)
+            collision_map = parse_layer_data(layer_data, layer_width, collision_start_tile)
         elif layer_name == "spawners":
             spawn_map = parse_layer_data(layer_data, layer_width)
 
