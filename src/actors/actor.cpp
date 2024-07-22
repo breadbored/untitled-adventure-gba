@@ -10,6 +10,7 @@
 #include "bn_regular_bg_map_cell.h"
 #include "bn_regular_bg_map_cell_info.h"
 #include "bn_fixed.h"
+#include "utils.hpp"
 
 #if DEBUG && DEBUG_COLLISION
 #include "bn_log.h"
@@ -38,6 +39,27 @@ void Actor::draw() {
         }
     }
 
+    vector2f_t toPosition = this->toPosition;
+
+    if (this->animate) {
+        if (toPosition.x == this->position.x && toPosition.y == this->position.y) {
+            this->animate = false;
+        } else {
+            this->position = this->fromPosition;
+            vector2f_t move = { 
+                toPosition.x - this->position.x, 
+                toPosition.y - this->position.y 
+            };
+            bn::fixed distance = Qsqrt(move.x * move.x + move.y * move.y);
+            if (distance > 0.75f) {
+                move.x *= 0.75f / distance;
+                move.y *= 0.75f / distance;
+            }
+            toPosition.x = this->position.x + move.x;
+            toPosition.y = this->position.y + move.y;
+        }
+    }
+
     // If we're drawing the sprite, we should make it visible
     if (!this->active_sprite.visible()) {
         this->active_sprite.set_visible(true);
@@ -46,10 +68,10 @@ void Actor::draw() {
     // Get the direction the actor is moving
     // We do this because Player and Npc control their movement independently
     // and the base actor needs to be agnostic to the type of actor
-    bool moving_up = this->toPosition.y - this->position.y < 0;
-    bool moving_down = this->toPosition.y - this->position.y > 0;
-    bool moving_left = this->toPosition.x - this->position.x < 0;
-    bool moving_right = this->toPosition.x - this->position.x > 0;
+    bool moving_up = toPosition.y - this->position.y < 0;
+    bool moving_down = toPosition.y - this->position.y > 0;
+    bool moving_left = toPosition.x - this->position.x < 0;
+    bool moving_right = toPosition.x - this->position.x > 0;
     this->moving = moving_up || moving_down || moving_left || moving_right;
 
     if (moving_left) {
@@ -62,8 +84,10 @@ void Actor::draw() {
         this->direction = Down;
     }
 
-    
     this->check_collision();
+    if (!this->animate) {
+        toPosition = this->toPosition;
+    }
 
     // Animation
     int animation_frame = (this->frame % 4) - 1;
@@ -88,7 +112,8 @@ void Actor::draw() {
         this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(4 + animation_frame));
     }
 
-    this->position = this->toPosition;
+    this->position = toPosition;
+    this->fromPosition = toPosition;
 
     this->active_sprite.set_x(this->position.x);
     this->active_sprite.set_y(this->position.y);
@@ -216,6 +241,10 @@ bool Actor::check_collision() {
     bool colliding_x = check_colliding_within_tile(xNextTileLayer, vector2_t {this->toPosition.x.round_integer(), this->position.y.round_integer() + 6});
     bool colliding_y = check_colliding_within_tile(yNextTileLayer, vector2_t {this->position.x.round_integer(), this->toPosition.y.round_integer() + 6});
     bool colliding = check_colliding_within_tile(nextTileLayer, vector2_t {this->toPosition.x.round_integer(), this->toPosition.y.round_integer() + 6});
+
+    #if DEBUG && DEBUG_COLLISION
+        BN_LOG("colliding: ", colliding ? "true" : "false");
+    #endif
 
     // Check collision and adjust movement
     if (colliding) {

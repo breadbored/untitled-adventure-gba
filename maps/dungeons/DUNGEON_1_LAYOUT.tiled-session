@@ -1,0 +1,46 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx": {
+            "scale": 1.9248,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 121.57107231920202,
+                "y": 91.1783042394015
+            }
+        },
+        "DUNGEON_1_LAYOUT.tmx": {
+            "scale": 0.2331,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 978.120978120978,
+                "y": 383.9553839553839
+            }
+        }
+    },
+    "last.externalTilesetPath": "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw",
+    "last.imagePath": "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/preprocess",
+    "map.height": 8,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 160,
+    "map.tileWidth": 240,
+    "map.width": 8,
+    "openFiles": [
+    ],
+    "project": "DUNGEON_1_LAYOUT.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 160,
+        "width": 240
+    }
+}

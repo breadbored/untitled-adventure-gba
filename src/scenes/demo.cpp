@@ -1,7 +1,7 @@
 #include "scenes/demo.hpp"
 #include "globals.h"
 #include "maps/map.h"
-#include "maps/test_village_map.h"
+#include "maps/dungeon_all_directions_map.h"
 #include "bn_string.h"
 #include "bn_format.h"
 #include "bn_sprite_animate_actions.h"
@@ -22,23 +22,62 @@ void demo_scene() {
   bn::vector<bn::sprite_ptr, 32> text_sprites;
 #endif
 
-  map = &test_village_map;
+  bn::rect_window external_window = bn::rect_window::external();
+  bn::rect_window rect_window = bn::rect_window::internal();
+  map = &dungeon_all_directions_map;
   bn::regular_bg_ptr map_bg = map->bg_item.create_bg(0, 0);
   bn::camera_ptr camera = bn::camera_ptr::create(0, 0);
   player->actor.active_sprite.set_camera(camera);
   map_bg.set_camera(camera);
-#if DEBUG && DEBUG_COLLISION_MAP
-  bn::regular_bg_ptr map_collision_bg = map->bg_collision_item.create_bg(0, 0);
-  map_collision_bg.set_camera(camera);
-#endif
+  external_window.set_camera(camera);
+  external_window.set_boundaries(
+    // Top
+    -1024 / 2,
+    // Left
+    -1024 / 2,
+    // Bottom
+    1024 / 2,
+    // Right
+    1024 / 2
+  );
+  // external_window.set_show_nothing();
+  external_window.set_show_bg(map_bg, false);
+  rect_window.set_camera(camera);
+  rect_window.set_boundaries(
+    // Top
+    -map_bg.dimensions().height() / 2,
+    // Left
+    -map_bg.dimensions().width() / 2,
+    // Bottom
+    map_bg.dimensions().height() / 2,
+    // Right
+    map_bg.dimensions().width() / 2
+  );
+  rect_window.set_show_all();
 
   scene_init();
 
   while (true) {
     player->draw();
 
-    camera.set_x(player->actor.position.x);
-    camera.set_y(player->actor.position.y);
+    // Don't follow the player in this scene
+    // camera.set_x(player->actor.position.x);
+    // camera.set_y(player->actor.position.y);
+    // Instead, lock the camera at the top left of the scene
+    camera.set_x((-map_bg.dimensions().width() / 2) + (240 / 2));
+    camera.set_y((-map_bg.dimensions().height() / 2) + (160 / 2));
+
+
+  // rect_window.set_boundaries(
+  //   // Top
+  //   -screen_size.y / 2 + player->actor.position.y,
+  //   // Left
+  //   -screen_size.x / 2 + player->actor.position.x,
+  //   // Bottom
+  //   screen_size.y / 2 + player->actor.position.y,
+  //   // Right
+  //   screen_size.x / 2 + player->actor.position.x
+  // );
 
     scene_draw();
 
