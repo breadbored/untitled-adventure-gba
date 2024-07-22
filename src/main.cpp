@@ -28,7 +28,7 @@
 #define DEBUG_RESET_SAVES false // Delete saves on startup. You can instead hold start+select+R-Shoulder+L-Shoulder on the "BreadCodes Presents" screen to wipe saves
 #define DEBUG_PLAYER_COORDINATES false // Enable the player coordinate logs in the demo scene
 #define DEBUG_COLLISION_MAP false // Enable the collision map in the demo scene
-#define DEBUG_COLLISION true // Enable print statements in Actor::check_collision()
+#define DEBUG_COLLISION false // Enable print statements in Actor::check_collision()
 #define DEBUG_FACING_DOT false // Enable a dot that faces the direction the player is moving
 #define VOLUME_LOW true // Set the volume to 25% of the default volume
 
@@ -71,6 +71,8 @@
 #include "actors/actor.cpp"
 #include "actors/player.cpp"
 #include "bn_sprite_items_player.h"
+#include "scenes/dungeon_demo.cpp"
+#include "dungeons/dungeon.cpp"
 
 SaveFiles save_files;
 uint8_t save_index;
@@ -127,7 +129,8 @@ int main()
       break;
 
     case SCENE_DEMO:
-      demo_scene();
+      // demo_scene();
+      dungeon_demo();
       break;
     
     default:

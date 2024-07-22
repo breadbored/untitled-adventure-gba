@@ -48,6 +48,7 @@
         "bn_sprite_ptr.h": "c",
         "bn_core.h": "c",
         "map.h": "c",
-        "utils.hpp": "c"
+        "utils.hpp": "c",
+        "complex": "cpp"
     }
 }

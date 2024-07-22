@@ -39,6 +39,8 @@ bool are_same(bn::fixed x, bn::fixed y);
 
 vector2_t get_screen_coordinates(vector2_t position);
 
+bn::fixed Qsqrt(bn::fixed numberFixed);
+
 int clamp(int value, int min, int max);
 
 vector2f_t normalize(vector2f_t vector, bn::fixed length);
