@@ -10,10 +10,10 @@
     "fileStates": {
         "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx": {
             "scale": 1.9248,
-            "selectedLayer": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 121.57107231920202,
-                "y": 91.1783042394015
+                "x": 128.32502078137986,
+                "y": 98.45178719867002
             }
         },
         "DUNGEON_1_LAYOUT.tmx": {
@@ -36,6 +36,8 @@
     ],
     "project": "DUNGEON_1_LAYOUT.tiled-project",
     "recentFiles": [
+        "DUNGEON_1_LAYOUT.tmx",
+        "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
