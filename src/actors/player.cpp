@@ -4,10 +4,10 @@
 #include "actors/player.hpp"
 #include "actors/actor.hpp"
 #include "bn_sprite_items_player.h"
+#include "bn_sprite_items_sword_swipe.h"
 
 void Player::init(vector2f_t position)
 {
-    bn::sprite_ptr sprite = bn::sprite_items::player.create_sprite(0, 0);
     this->actor.init(position);
 }
 
