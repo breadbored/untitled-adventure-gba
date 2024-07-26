@@ -11,6 +11,7 @@
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_item.h"
 #include "bn_sprite_items_player.h"
+#include "bn_sprite_items_sword_swipe.h"
 #include "bn_sprite_animate_actions.h"
 #include "bn_cameras.h"
 #include "bn_optional.h"
@@ -39,7 +40,8 @@ public:
         health(16),
         max_health(16),
         center(false),
-        is_player(is_player)
+        is_player(is_player),
+        weapon_swipe(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
@@ -60,11 +62,12 @@ public:
         center(false),
         is_player(false),
         radius(8),
-        animate(false)
+        animate(false),
+        weapon_swipe(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
-    };
+    }; 
 
     void init(vector2f_t position);
     void draw();
@@ -90,6 +93,7 @@ public:
     bool animate;
     uint8_t radius;
     bn::sprite_item sprite_item;
+    bn::sprite_ptr weapon_swipe;
 
     bool is_player;
     bool center;
@@ -97,6 +101,9 @@ public:
     int health;
     int max_health;
     bn::sprite_ptr active_sprite;
+
+    bool swiping;
+    uint8_t swiping_timer;
 
 private:
     bool moving;

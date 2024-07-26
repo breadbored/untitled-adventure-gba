@@ -4,7 +4,10 @@
 #include "actors/player.hpp"
 #include "actors/actor.hpp"
 #include "bn_sprite_items_player.h"
-#include "bn_sprite_items_sword_swipe.h"
+
+#if DEBUG
+#include "bn_log.h"
+#endif
 
 void Player::init(vector2f_t position)
 {
@@ -35,8 +38,12 @@ void Player::draw()
         vector2f_t normalized = normalize(move, 0.75);
         this->actor.toPosition.x = this->actor.position.x + normalized.x;
         this->actor.toPosition.y = this->actor.position.y + normalized.y;
+        
+        if(bn::keypad::a_pressed()) {
+            this->actor.swiping_timer = 30;
+            this->actor.swiping = true;
+        }
     }
-
 #if DEBUG && DEBUG_FACING_DOT
     this->facing_dot.set_position(player->actor.toPosition.x - player->actor.position.x, player->actor.toPosition.y - player->actor.position.y);
 #endif

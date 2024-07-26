@@ -11,8 +11,9 @@
 #include "bn_regular_bg_map_cell_info.h"
 #include "bn_fixed.h"
 #include "utils.hpp"
+#include "bn_sprite_items_sword_swipe.h"
 
-#if DEBUG && DEBUG_COLLISION
+#if DEBUG
 #include "bn_log.h"
 #endif
 
@@ -82,6 +83,33 @@ void Actor::draw() {
         this->direction = Up;
     } else if (moving_down) {
         this->direction = Down;
+    }
+
+    // Weapon Swipe Animation Logic
+    //Code to figure out where the weapon swipe animation needs to play.
+    if(this->direction == Left) {
+        this->weapon_swipe.set_position(player->actor.position.x - player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+    } else if(this->direction == Right) {
+        this->weapon_swipe.set_position(player->actor.position.x + player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+    } else if(this->direction == Up) {
+        this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y - player->actor.active_sprite.dimensions().height()/2);
+    } else {
+        this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y + player->actor.active_sprite.dimensions().height()/2);
+    }
+    if (!this->weapon_swipe.camera().has_value()) {
+        this->weapon_swipe.set_camera(this->active_sprite.camera());
+    }
+    
+    //Code to turn the animation on for a set amount of frames and turn it back off.
+    if(this->swiping == true && this->swiping_timer > 0) {
+        this->swiping_timer--;
+        this->weapon_swipe.set_visible(true);
+        this->animate = true;
+    }
+    else {
+        this->weapon_swipe.set_visible(false);
+        this->swiping = false;
+        this->animate = false;
     }
 
     this->check_collision();
