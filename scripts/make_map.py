@@ -542,7 +542,7 @@ def batch_process_spritesheets(input_dir, output_dir):
                 if filename.endswith(".png"):
                     input_file = os.path.join(subdir_path, filename)
                     output_file = os.path.join(output_dir, filename)
-                    process_spritesheet(input_file, output_file, input_sprite_size, "32x32")
+                    process_spritesheet(input_file, output_file, input_sprite_size, input_sprite_size)
 
 batch_process_spritesheets("sprites/raw/", "sprites/preprocess/")
 
@@ -554,12 +554,17 @@ for filename in os.listdir('sprites/preprocess/'):
         bmp_json_path = os.path.join('graphics/', os.path.splitext(filename.lower())[0] + '.json')
         convert_png_to_bmp(png_path, bmp_path, color_depth=16)
         print(f"Converted {filename} to BMP and saved to {bmp_path}")
-            # write a json file with the same name as the output file
+
+        # get width of the image
+        img = Image.open(png_path)
+        width, height = img.size
+
+        # write a json file with the same name as the output file
         with open(bmp_json_path, "w") as f:
-            f.write("""
-                {
+            f.write(f"""
+                {{
                     "type": "sprite",
-                    "height": 32,
-                    "width": 32
-                }
+                    "height": {width},
+                    "width": {width}
+                }}
             """)
