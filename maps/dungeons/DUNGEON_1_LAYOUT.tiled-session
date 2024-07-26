@@ -3,26 +3,36 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/collisions.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon1-tiles.tsx": {
+            "scaleInDock": 1
+        },
         "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx": {
             "scale": 1.9248,
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 128.32502078137986,
-                "y": 98.45178719867002
+                "y": 99.49085619285121
             }
         },
         "DUNGEON_1_LAYOUT.tmx": {
             "scale": 0.2331,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 978.120978120978,
-                "y": 383.9553839553839
+                "x": 960.9609609609608,
+                "y": 615.6156156156155
             }
+        },
+        "dungeon_all_directions.tsx": {
+            "scaleInDock": 3.1655
         }
     },
     "last.externalTilesetPath": "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw",
@@ -33,6 +43,8 @@
     "map.tileWidth": 240,
     "map.width": 8,
     "openFiles": [
+        "DUNGEON_1_LAYOUT.tmx",
+        "/Users/jasonbcarpenter/Documents/gbajam-breadcodes/maps/raw/dungeon_all_directions.tmx"
     ],
     "project": "DUNGEON_1_LAYOUT.tiled-project",
     "recentFiles": [

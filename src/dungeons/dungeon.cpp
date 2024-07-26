@@ -37,6 +37,7 @@ void DungeonManager::init() {
     this->p_room_bg.dimensions().width() / 2
   );
   this->internal_window.set_show_all();
+  bn::bg_palettes::set_transparent_color(bn::color(0x00 * 0.12156862745, 0x00 * 0.12156862745, 0x00 * 0.12156862745));
   this->p_room_bg.set_blending_enabled(true);
 }
 
@@ -153,7 +154,7 @@ void DungeonManager::draw() {
       bn::blending::set_transparency_alpha(1.0f);
     } else if (progress >= 0.5f) {
       // Fade in
-      bn::fixed transparency_alpha = (progress - 0.5f) * 2.0f;
+      bn::fixed transparency_alpha = (progress - 0.6f) * 3.0f;
       bn::fixed clamped = transparency_alpha >= 0.0f ? (transparency_alpha <= 1.0f ? transparency_alpha : 1.0f) : 0.0f;
       bn::blending::set_transparency_alpha(clamped);
     }
