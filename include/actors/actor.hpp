@@ -94,8 +94,8 @@ public:
     bool is_player;
     bool center;
     bool enemy;
-    int health;
-    int max_health;
+    uint8_t health;
+    uint8_t max_health;
     bn::sprite_ptr active_sprite;
 
 private:
