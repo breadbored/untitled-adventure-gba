@@ -29,7 +29,6 @@
 #define DEBUG_PLAYER_COORDINATES false // Enable the player coordinate logs in the demo scene
 #define DEBUG_COLLISION_MAP false // Enable the collision map in the demo scene
 #define DEBUG_COLLISION false // Enable print statements in Actor::check_collision()
-#define DEBUG_FACING_DOT false // Enable a dot that faces the direction the player is moving
 #define VOLUME_LOW true // Set the volume to 25% of the default volume
 
 // If DEBUG is defined and true, we can turn on logging in the mGBA emulator
