@@ -7,11 +7,10 @@
 
 void Player::draw()
 {
-    /**
-     * Controller inputs per draw frame
-    */
-
     if (!this->actor.animate) {
+        /**
+         * Controller inputs per draw frame
+        */
         // Since multiple directions can be held, we separate the statements
         vector2f_t move = { 0.0, 0.0 };
         if (bn::keypad::left_held() || bn::keypad::left_pressed()) {
@@ -29,6 +28,11 @@ void Player::draw()
         vector2f_t normalized = normalize(move, 0.75);
         this->actor.toPosition.x = this->actor.position.x + normalized.x;
         this->actor.toPosition.y = this->actor.position.y + normalized.y;
+
+        /**
+         * Other player actions that happen while the player is not transitioning
+         */
+        // ...
     }
     
     this->actor.draw();
