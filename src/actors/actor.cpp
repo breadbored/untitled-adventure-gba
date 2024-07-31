@@ -89,12 +89,16 @@ void Actor::draw() {
     //Code to figure out where the weapon swipe animation needs to play.
     if(this->direction == Left) {
         this->weapon_swipe.set_position(player->actor.position.x - player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+        this->weapon_swipe.set_z_order(-1);
     } else if(this->direction == Right) {
         this->weapon_swipe.set_position(player->actor.position.x + player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+        this->weapon_swipe.set_z_order(-1);
     } else if(this->direction == Up) {
         this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y - player->actor.active_sprite.dimensions().height()/2);
+        this->weapon_swipe.set_z_order(0);
     } else {
         this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y + player->actor.active_sprite.dimensions().height()/2);
+        this->weapon_swipe.set_z_order(-1);
     }
     if (!this->weapon_swipe.camera().has_value()) {
         this->weapon_swipe.set_camera(this->active_sprite.camera());
