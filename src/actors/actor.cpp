@@ -109,7 +109,8 @@ void Actor::draw() {
     else {
         this->weapon_swipe.set_visible(false);
         this->swiping = false;
-        this->animate = false;
+        // don't kill the animate in the `else` case, it stops screen transitions
+        // this->animate = false;
     }
 
     this->check_collision();
