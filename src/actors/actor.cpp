@@ -17,14 +17,6 @@
 #include "bn_log.h"
 #endif
 
-void Actor::init(vector2f_t position)
-{
-    this->position = position;
-    // this->sprite = sprite;
-    // sprite.create_sprite(0, 0);
-    // this->active_sprite.set_bg_priority(1);
-}
-
 void Actor::draw() {
     // If not a player...
     if (!this->is_player) {
@@ -85,38 +77,6 @@ void Actor::draw() {
         this->direction = Down;
     }
 
-    // Weapon Swipe Animation Logic
-    //Code to figure out where the weapon swipe animation needs to play.
-    if(this->direction == Left) {
-        this->weapon_swipe.set_position(player->actor.position.x - player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
-        this->weapon_swipe.set_z_order(-1);
-    } else if(this->direction == Right) {
-        this->weapon_swipe.set_position(player->actor.position.x + player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
-        this->weapon_swipe.set_z_order(-1);
-    } else if(this->direction == Up) {
-        this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y - player->actor.active_sprite.dimensions().height()/2);
-        this->weapon_swipe.set_z_order(0);
-    } else {
-        this->weapon_swipe.set_position(player->actor.position.x, player->actor.position.y + player->actor.active_sprite.dimensions().height()/2);
-        this->weapon_swipe.set_z_order(-1);
-    }
-    if (!this->weapon_swipe.camera().has_value()) {
-        this->weapon_swipe.set_camera(this->active_sprite.camera());
-    }
-    
-    //Code to turn the animation on for a set amount of frames and turn it back off.
-    if(this->swiping == true && this->swiping_timer > 0) {
-        this->swiping_timer--;
-        this->weapon_swipe.set_visible(true);
-        this->animate = true;
-    }
-    else {
-        this->weapon_swipe.set_visible(false);
-        this->swiping = false;
-        // don't kill the animate in the `else` case, it stops screen transitions
-        // this->animate = false;
-    }
-
     this->check_collision();
     if (!this->animate) {
         toPosition = this->toPosition;
@@ -136,13 +96,13 @@ void Actor::draw() {
     }
     // Since we can only draw one direction at a time, we combine the statements
     if (this->direction == Down) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(1 + animation_frame));
+        this->active_sprite.set_tiles(this->actor_sprite.tiles_item().create_tiles(1 + animation_frame));
     } else if (this->direction == Up) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(10 + animation_frame));
+        this->active_sprite.set_tiles(this->actor_sprite.tiles_item().create_tiles(10 + animation_frame));
     } else if (this->direction == Right) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(7 + animation_frame));
+        this->active_sprite.set_tiles(this->actor_sprite.tiles_item().create_tiles(7 + animation_frame));
     } else if (this->direction == Left) {
-        this->active_sprite.set_tiles(this->sprite_item.tiles_item().create_tiles(4 + animation_frame));
+        this->active_sprite.set_tiles(this->actor_sprite.tiles_item().create_tiles(4 + animation_frame));
     }
 
     this->position = toPosition;
@@ -150,6 +110,42 @@ void Actor::draw() {
 
     this->active_sprite.set_x(this->position.x);
     this->active_sprite.set_y(this->position.y);
+}
+
+void Actor::useObject(bn::fixed paddingX, bn::fixed paddingY) {
+    // Weapon Swipe Animation Logic
+    //Code to figure out where the weapon swipe animation needs to play.
+    this->active_item.set_z_order(-1);
+    if(this->direction == Left) {
+        // this->active_item.set_position(player->actor.position.x - player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+        this->active_item.set_position(player->actor.position.x - player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+    } else if(this->direction == Right) {
+        // this->active_item.set_position(player->actor.position.x + player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+        this->active_item.set_position(player->actor.position.x + player->actor.active_sprite.dimensions().width()/2, player->actor.position.y);
+    } else if(this->direction == Up) {
+        // this->active_item.set_position(player->actor.position.x, player->actor.position.y - player->actor.active_sprite.dimensions().height()/2);
+        this->active_item.set_position(player->actor.position.x, player->actor.position.y - player->actor.active_sprite.dimensions().height()/2);
+        this->active_item.set_z_order(0);
+    } else {
+        // this->active_item.set_position(player->actor.position.x, player->actor.position.y + player->actor.active_sprite.dimensions().height()/2);
+        this->active_item.set_position(player->actor.position.x + paddingX, player->actor.position.y + paddingY);
+    }
+    if (!this->active_item.camera().has_value()) {
+        this->active_item.set_camera(this->active_sprite.camera());
+    }
+    
+    //Code to turn the animation on for a set amount of frames and turn it back off.
+    if(this->itemActive == true && this->item_timer > 0) {
+        this->item_timer--;
+        this->active_item.set_visible(true);
+        this->animate = true;
+    }
+    else {
+        this->active_item.set_visible(false);
+        this->itemActive = false;
+        // don't kill the animate in the `else` case, it stops screen transitions
+        // this->animate = false;
+    }
 }
 
 vector2_t getTile(int nextX, int nextY) {

@@ -26,14 +26,15 @@ enum direction_t
 
 class Actor {
 public:
-    Actor(bn::sprite_item sprite_item, bool is_player = false) : 
+    Actor(bn::sprite_item actor_sprite, bool is_player = false) : 
         direction(Down),
         position(vector2f_t { 0, 0 }),
         fromPosition(vector2f_t { 0, 0 }),
         toPosition(vector2f_t { 0, 0 }),
+        holdPosition(vector2_t { 0, 0 }),
         moving(false),
-        sprite_item(sprite_item),
-        active_sprite(sprite_item.create_sprite(0, 0)),
+        actor_sprite(actor_sprite),
+        active_sprite(actor_sprite.create_sprite(0, 0)),
         frame(0),
         frame_delay(0),
         enemy(false),
@@ -41,19 +42,20 @@ public:
         max_health(16),
         center(false),
         is_player(is_player),
-        weapon_swipe(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
+        active_item(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
     };
-    Actor(bn::sprite_item sprite_item) : 
+    Actor(bn::sprite_item actor_sprite) : 
         direction(Down),
         position(vector2f_t { 0, 0 }),
         fromPosition(vector2f_t { 0, 0 }),
         toPosition(vector2f_t { 0, 0 }),
+        holdPosition(vector2_t { 0, 0 }),
         moving(false),
-        sprite_item(sprite_item),
-        active_sprite(sprite_item.create_sprite(0, 0)),
+        actor_sprite(actor_sprite),
+        active_sprite(actor_sprite.create_sprite(0, 0)),
         frame(0),
         frame_delay(0),
         enemy(false),
@@ -63,14 +65,14 @@ public:
         is_player(false),
         radius(8),
         animate(false),
-        weapon_swipe(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
+        active_item(bn::sprite_items::sword_swipe.create_sprite(this->position.x, this->position.y))
     {
         active_sprite.set_visible(false);
         // active_sprite.dimensions()
     }; 
 
-    void init(vector2f_t position);
     void draw();
+    void useObject(bn::fixed paddingX, bn::fixed paddingY);
     bool check_collision();
 
     vector2_t getPosition() {
@@ -90,10 +92,11 @@ public:
     direction_t direction;
     vector2f_t fromPosition;
     vector2f_t toPosition;
+    vector2_t holdPosition;
     bool animate;
     uint8_t radius;
-    bn::sprite_item sprite_item;
-    bn::sprite_ptr weapon_swipe;
+    bn::sprite_item actor_sprite;
+    bn::sprite_ptr active_item;
 
     bool is_player;
     bool center;
@@ -102,8 +105,9 @@ public:
     int max_health;
     bn::sprite_ptr active_sprite;
 
-    bool swiping;
-    uint8_t swiping_timer;
+
+    bool itemActive;
+    uint8_t item_timer;
 
 private:
     bool moving;

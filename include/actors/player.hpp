@@ -7,6 +7,7 @@
 #include <math.h>
 #include "utils.hpp"
 #include "actors/actor.hpp"
+// #include "actors/anchors/player_anchor.hpp"
 #include "bn_sprites.h"
 #include "bn_core.h"
 #include "bn_sprite_ptr.h"
@@ -25,7 +26,10 @@ public:
 #if DEBUG && DEBUG_FACING_DOT
         , facing_dot(bn::sprite_items::debug_dot.create_sprite(0, 0))
 #endif
-    {};
+    {
+        // this->actor.holdPosition = { 4, 6 };
+        this->actor.holdPosition = { 0, 0 };
+    };
     void init(vector2f_t position);
     void draw();
     

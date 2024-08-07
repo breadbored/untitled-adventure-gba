@@ -9,10 +9,7 @@
 #include "bn_log.h"
 #endif
 
-void Player::init(vector2f_t position)
-{
-    this->actor.init(position);
-}
+void Player::init(vector2f_t position) {}
 
 void Player::draw()
 {
@@ -40,13 +37,14 @@ void Player::draw()
         this->actor.toPosition.y = this->actor.position.y + normalized.y;
         
         if(bn::keypad::a_pressed()) {
-            this->actor.swiping_timer = 30;
-            this->actor.swiping = true;
+            this->actor.item_timer = 30;
+            this->actor.itemActive = true;
         }
     }
-#if DEBUG && DEBUG_FACING_DOT
-    this->facing_dot.set_position(player->actor.toPosition.x - player->actor.position.x, player->actor.toPosition.y - player->actor.position.y);
-#endif
+    #if DEBUG && DEBUG_FACING_DOT
+        this->facing_dot.set_position(player->actor.toPosition.x - player->actor.position.x, player->actor.toPosition.y - player->actor.position.y);
+    #endif
     
     this->actor.draw();
+    this->actor.useObject(this->actor.holdPosition.x, this->actor.holdPosition.y);
 }
